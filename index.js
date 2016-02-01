@@ -15,7 +15,6 @@ var connection = mysql.createConnection({
 connection.connect();
 
 passport.use(new HTTPBasicStrat({}, function(username, password, cb){
-    console.log("Authenticating");
     connection.query("SELECT * from Users WHERE name=?", username, function(err, rows){
         if (err) { return cb(err);}
         if (rows.length > 0){
@@ -26,29 +25,12 @@ passport.use(new HTTPBasicStrat({}, function(username, password, cb){
     });
 }));
 
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
-app.use((req, res, next)=>{
-    req.body.user = {name: "Per"};
-    next();
-});
-
 var port = process.env.port || 8080;
-
 var router = express.Router();
-
-function ensureAuthenticated(req, res, next){
-    if (req.isAuthenticated()){
-        next();
-    }else{
-        next();
-        //res.send(403);
-    }
-}
-
 
 app.use("/api", passport.authenticate('basic', {session: false}));
 
