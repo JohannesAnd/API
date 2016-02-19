@@ -25,12 +25,19 @@ passport.use(new HTTPBasicStrat({}, function(username, password, cb){
     });
 }));
 
+app.set('views', 'views');
+app.set('view engine', 'jade');
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
 var port = process.env.port || 8080;
 var router = express.Router();
+
+app.get("/", function(req, res){
+    res.render('UserList', {numbers: [5, 6, 2, 8]});
+});
 
 app.use("/api", passport.authenticate('basic', {session: false}));
 
