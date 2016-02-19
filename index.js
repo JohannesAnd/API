@@ -37,8 +37,15 @@ app.use(passport.initialize());
 var port = process.env.port || 8080;
 var router = express.Router();
 
-app.get("/", function(req, res){
-    res.render('UserList', {numbers: [5, 6, 2, 8]});
+app.get("/", function(req, res) {
+    res.render('Index');
+});
+
+app.get("/users", function(req, res, cb) {
+    connection.query("SELECT * from Users", function(err, rows){
+        if (err) { return cb(err);}
+        res.render("UserList", {users: rows});
+    });
 });
 
 app.use("/api", passport.authenticate('basic', {session: false}));
