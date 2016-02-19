@@ -1,4 +1,9 @@
-block content
-    ul
-    each val in numbers
-        li= "Nummeret er "+ val
+html
+    head
+        link(href='UserList.css', rel='stylesheet')
+
+    body
+        #list
+            ul
+                each val in numbers
+                    li= "Nummeret er "+ val
