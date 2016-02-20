@@ -1,9 +1,10 @@
-html
-    head
-        link(href='UserList.css', rel='stylesheet')
+extends ./MainMenu.jade
 
-    body
-        #list
-            ul
-                each user in users
-                    li= user.name
+block header
+    link(href='UserList.css', rel='stylesheet')
+
+block content
+    #list
+        ul
+            each user in users
+                li= user.name

@@ -35,13 +35,14 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 
 var port = process.env.port || 8080;
-var router = express.Router();
+var APIrouter = express.Router();
+var WEBrouter = express.Router();
 
-app.get("/", function(req, res) {
+WEBrouter.get("/", function(req, res) {
     res.render('Index');
 });
 
-app.get("/users", function(req, res, cb) {
+WEBrouter.get("/users", function(req, res, cb) {
     connection.query("SELECT * from Users", function(err, rows){
         if (err) { return cb(err);}
         res.render("UserList", {users: rows});
@@ -50,12 +51,13 @@ app.get("/users", function(req, res, cb) {
 
 app.use("/api", passport.authenticate('basic', {session: false}));
 
-router.get("/", function(req, res){
+APIrouter.get("/", function(req, res){
     console.log("Getting /api");
     res.json({Hello: req.user.name});
 });
 
-app.use("/api", router);
+app.use("/api", APIrouter);
+app.use("/", WEBrouter);
 
 app.listen(port);
 console.log("Magic is due on port "+port);
