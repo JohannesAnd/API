@@ -8,3 +8,14 @@ block content
         ul
             each user in users
                 li= user.name
+    form(action="/newUser", method="post")
+        fieldset
+            legend
+                h4 Opprett bruker
+            input(id="name", name="name" type="text", value="", placeholder="Navn")
+            br
+            input(id="password", name="password" type="password", placeholder="Passord")
+            br
+            input(id="password2", name="password2" type="password", placeholder="Gjenta passord")
+            br
+            button(type="submit") Opprett bruker

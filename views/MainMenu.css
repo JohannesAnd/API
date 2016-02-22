@@ -17,7 +17,6 @@
     height: 70px;
 }
 
-@import url(http://fonts.googleapis.com/css?family=Cantora+One);
 * {
     box-sizing: border-box;
 }
@@ -34,14 +33,10 @@ nav[role="full-horizontal"] ul > li {
     float: left;
     padding: .25em 1em;
     margin: 1.25em 1em;
-    text-transform: uppercase;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.8);
     text-align: center;
     border-radius: .75em;
-    transition-duration: .3s;
-    transition-timing-function: ease-in-out;
-    transition-property: background, color, padding, border-radius;
     box-shadow: 0.1em -0.1em 0 0.1em rgba(0, 0, 0, 0.2), inset 0 0 0 0.15em rgba(0, 0, 0, 0.4), -0.1em 0.1em 0 0.1em rgba(0, 0, 0, 0.2);
 }
 nav[role="full-horizontal"] ul > li:after {

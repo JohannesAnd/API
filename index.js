@@ -49,6 +49,17 @@ WEBrouter.get("/users", function(req, res, cb) {
     });
 });
 
+WEBrouter.post("/newUser", function(req, res) {
+    var form = req.body;
+    var user = {name: form.name, password: form.password};
+    if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
+        connection.query("INSERT INTO Users SET ?", user, function(err, rows){
+            if (err) { return cb(err);}
+            res.redirect("/users");
+        });
+    }
+});
+
 app.use("/api", passport.authenticate('basic', {session: false}));
 
 APIrouter.get("/", function(req, res){
