@@ -7,8 +7,8 @@ var HTTPBasicStrat = require('passport-http').BasicStrategy;
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
     host     : 'localhost',
-    user     : 'root',
-    password : 'johannes',
+    user     : process.env.dbuser,
+    password : process.env.dbpassword,
     database : 'cars'
 });
 
