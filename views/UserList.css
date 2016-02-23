@@ -1,8 +1,6 @@
-#list > ul {
-    font-size: large;
-    list-style: none;
-}
 
-fieldset {
-    display: inline;
+ul {
+    list-style-type: none;
+    padding-top: 20px;
+    opacity: 0.8;
 }
