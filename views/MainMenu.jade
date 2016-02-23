@@ -1,20 +1,22 @@
 html
     head
         link(href='MainMenu.css', rel='stylesheet')
-        block header
+        title TripTrackr
     body
         #container
+            #title
+                a(href="/")
+                    img(src= "Images/Logo.png")
             #menu
                 nav(role="full-horizontal")
                     ul
                         li
-                            a(href="/") Home
+                            a(href="/signIn") Sign in
                         li
                             a(href="/users") Users
                         li
                             a(href="/api") API
-                        li
-                            a(href="/test") Test
+
             #content
                 block content
             #footer

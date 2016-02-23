@@ -1,0 +1,17 @@
+extends ./MainMenu.jade
+
+
+
+block content
+    link(href='Form.css', rel='stylesheet')
+    link(href='SignIn.css', rel='stylesheet')
+
+    form(action="/signIn", method="post")
+        fieldset
+
+            input(id="name", name="name" type="text", value="", placeholder="Username")
+
+            input(id="password", name="password" type="password", placeholder="Password")
+
+            input(type="submit", value="Sign in")
+

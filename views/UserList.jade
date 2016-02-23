@@ -1,21 +1,22 @@
 extends ./MainMenu.jade
 
-block header
-    link(href='UserList.css', rel='stylesheet')
 
 block content
-    #list
+    link(href='Form.css', rel='stylesheet')
+    link(href='UserList.css', rel='stylesheet')
+
+    #userList
         ul
             each user in users
                 li= user.name
+
     form(action="/newUser", method="post")
         fieldset
-            legend
-                h4 Opprett bruker
-            input(id="name", name="name" type="text", value="", placeholder="Navn")
-            br
-            input(id="password", name="password" type="password", placeholder="Passord")
-            br
-            input(id="password2", name="password2" type="password", placeholder="Gjenta passord")
-            br
-            button(type="submit") Opprett bruker
+
+            input(id="name", name="name" type="text", value="", placeholder="Name")
+
+            input(id="password", name="password" type="password", placeholder="Password")
+
+            input(id="password2", name="password2" type="password", placeholder="Repeat password")
+
+            input(type="submit" value="Create user")
