@@ -7,8 +7,8 @@ var HTTPBasicStrat = require('passport-http').BasicStrategy;
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
     host     : 'localhost',
-    user     : 'root',
-    password : 'johannes',
+    user     : 'tord',
+    password : 'qwerty',
     database : 'cars'
 });
 
@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
-var port = process.env.port || 8080;
+var port = process.env.port || 9090;
 var APIrouter = express.Router();
 var WEBrouter = express.Router();
 
@@ -47,6 +47,10 @@ WEBrouter.get("/users", function(req, res, cb) {
         if (err) { return cb(err);}
         res.render("UserList", {users: rows});
     });
+});
+
+WEBrouter.get("/test", function(req, res, cb) {
+
 });
 
 WEBrouter.post("/newUser", function(req, res) {
