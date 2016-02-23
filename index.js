@@ -1,8 +1,13 @@
 var express = require('express');
 var app = express();
+
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+
 var passport = require('passport');
 var HTTPBasicStrat = require('passport-http').BasicStrategy;
+var LocalStrat = require('passport-local').Strategy;
 
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -26,6 +31,7 @@ function validateUser(username, password, cb) {
 }
 
 passport.use(new HTTPBasicStrat({}, validateUser));
+passport.use(new LocalStrat(validateUser));
 
 app.set('views', './views');
 app.set('view engine', 'jade');
@@ -34,7 +40,15 @@ app.use(express.static(__dirname + '/views'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(expressSession({
+    secret: process.env.secret || "secret",
+    resave: false,
+    saveUninitialized: false
+}));
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 var port = process.env.port || 8080;
 var APIrouter = express.Router();
@@ -61,6 +75,12 @@ WEBrouter.post("/newUser", function(req, res) {
         });
     }
 });
+
+WEBrouter.post('/logIn', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true })
+);
 
 app.use("/api", passport.authenticate('basic', {session: false}));
 
