@@ -33,9 +33,13 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 passport.serializeUser(generalController.SerializeUser);
 passport.deserializeUser(generalController.DeserializeUser);
+
+app.use(function(req, res, next){
+    res.locals.user = req.user;
+    next();
+});
 
 var port = process.env.port || 8080;
 var APIrouter = express.Router();
