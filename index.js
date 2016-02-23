@@ -50,7 +50,7 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-var port = process.env.port || 8080;
+var port = process.env.port || 9090;
 var APIrouter = express.Router();
 var WEBrouter = express.Router();
 
@@ -63,6 +63,10 @@ WEBrouter.get("/users", function(req, res, cb) {
         if (err) { return cb(err);}
         res.render("UserList", {users: rows});
     });
+});
+
+WEBrouter.get("/signIn", function(req, res, cb) {
+    res.render("SignIn");
 });
 
 WEBrouter.post("/newUser", function(req, res) {
@@ -87,6 +91,10 @@ app.use("/api", passport.authenticate('basic', {session: false}));
 APIrouter.get("/", function(req, res){
     console.log("Getting /api");
     res.json({Hello: req.user.name});
+});
+
+APIrouter.get("/gps_log", function(req, res) {
+   res.json({GPS: req.user.password});
 });
 
 app.use("/api", APIrouter);
