@@ -1,11 +1,21 @@
 #container {
     max-width: 800px;
     margin: auto;
-    background-color: #b2babf;
+    background-color: #ffffff;
     box-shadow: black 10px;
     padding: 15px;
     min-height: 100%;
 }
+
+#title img {
+    float: left;
+    height: auto;
+    width: auto;
+    max-width: 160px;
+    max-height: 160px;
+    padding-top: 14px;
+}
+
 
 #content {
     width: 100%;
@@ -19,6 +29,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: "Myriad Pro";
 }
 
 nav[role="full-horizontal"] {
@@ -30,14 +41,13 @@ nav[role="full-horizontal"] ul {
 }
 nav[role="full-horizontal"] ul > li {
     position: relative;
-    float: left;
+    float: right;
     padding: .25em 1em;
     margin: 1.25em 1em;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.8);
     text-align: center;
-    border-radius: .75em;
-    box-shadow: 0.1em -0.1em 0 0.1em rgba(0, 0, 0, 0.2), inset 0 0 0 0.15em rgba(0, 0, 0, 0.4), -0.1em 0.1em 0 0.1em rgba(0, 0, 0, 0.2);
+
 }
 nav[role="full-horizontal"] ul > li:after {
     position: absolute;
@@ -50,23 +60,30 @@ nav[role="full-horizontal"] ul > li:after {
 nav[role="full-horizontal"] ul > li:last-child:after {
     box-shadow: none;
 }
+/*
 nav[role="full-horizontal"] ul > li:hover {
-    background-color: rgba(251, 93, 0, 0.8);
-}
+    background-color: rgba(217, 217, 231, 0.0);
+}*/
+
 nav[role="full-horizontal"] ul > li:hover > a {
-    color: #fff;
+    color: #3a3a3a;
+    text-decoration: underline;
 }
 nav[role="full-horizontal"] ul > li > a {
     color: #333;
     text-decoration: none;
     font-size: 1.4em;
-    transition: color .3s ease-in-out;
+    transition: color .2s ease-in-out;
 }
 
 /* small screens */
 @media screen and (max-width: 44em) {
     body {
         margin: 1.5em 0;
+    }
+
+    #title img {
+        opacity: 0.0;
     }
 
     nav[role="full-horizontal"] ul {
