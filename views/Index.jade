@@ -4,4 +4,7 @@ block header
     link(href='index.css', rel='stylesheet')
 
 block content
-    p Front page
+    if user
+        p= "Welcome, " + user.name
+    else
+        p= "Welcome, please log in"

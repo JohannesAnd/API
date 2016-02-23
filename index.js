@@ -9,6 +9,10 @@ var passport = require('passport');
 var HTTPBasicStrat = require('passport-http').BasicStrategy;
 var LocalStrat = require('passport-local').Strategy;
 
+var webController = require('./controllers/webController');
+var APIController = require('./controllers/APIController');
+var generalController = require('./controllers/generalController');
+
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
     host     : 'localhost',
@@ -19,19 +23,8 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-function validateUser(username, password, cb) {
-    connection.query("SELECT * from Users WHERE name=?", username, function(err, rows){
-        if (err) { return cb(err);}
-        if (rows.length > 0){
-            return cb(null, rows[0]);
-        }else {
-            return cb(null, false);
-        }
-    });
-}
-
-passport.use(new HTTPBasicStrat({}, validateUser));
-passport.use(new LocalStrat(validateUser));
+passport.use(new HTTPBasicStrat({}, generalController.ValidateUser));
+passport.use(new LocalStrat(generalController.ValidateUser));
 
 app.set('views', './views');
 app.set('view engine', 'jade');
@@ -50,52 +43,17 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+passport.serializeUser(generalController.SerializeUser);
+passport.deserializeUser(generalController.DeserializeUser);
+
 var port = process.env.port || 8080;
 var APIrouter = express.Router();
 var WEBrouter = express.Router();
-
-WEBrouter.get("/", function(req, res) {
-    res.render('Index');
-});
-
-WEBrouter.get("/users", function(req, res, cb) {
-    connection.query("SELECT * from Users", function(err, rows){
-        if (err) { return cb(err);}
-        res.render("UserList", {users: rows});
-    });
-});
-
-WEBrouter.get("/signIn", function(req, res, cb) {
-    res.render("SignIn");
-});
-
-WEBrouter.post("/newUser", function(req, res) {
-    var form = req.body;
-    var user = {name: form.name, password: form.password};
-    if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
-        connection.query("INSERT INTO Users SET ?", user, function(err, rows){
-            if (err) { return cb(err);}
-            res.redirect("/users");
-        });
-    }
-});
-
-WEBrouter.post('/signIn', passport.authenticate('local'), function(req, res) {
-    console.log(req);
-    res.redirect("/");
-});
+require('./routes/webRoutes')(WEBrouter, passport);
+require('./routes/APIRoutes')(APIrouter);
 
 app.use("/api", passport.authenticate('basic', {session: false}));
-
-APIrouter.get("/", function(req, res){
-    console.log("Getting /api");
-    res.json({Hello: req.user.name});
-});
-
-APIrouter.get("/gps_log", function(req, res) {
-   res.json({GPS: req.user.password});
-});
-
 app.use("/api", APIrouter);
 app.use("/", WEBrouter);
 
