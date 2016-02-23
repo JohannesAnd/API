@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-passport.use(new HTTPBasicStrat({}, function(username, password, cb){
+function validateUser(username, password, cb) {
     connection.query("SELECT * from Users WHERE name=?", username, function(err, rows){
         if (err) { return cb(err);}
         if (rows.length > 0){
@@ -23,7 +23,9 @@ passport.use(new HTTPBasicStrat({}, function(username, password, cb){
             return cb(null, false);
         }
     });
-}));
+}
+
+passport.use(new HTTPBasicStrat({}, validateUser));
 
 app.set('views', './views');
 app.set('view engine', 'jade');
