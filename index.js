@@ -50,7 +50,7 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-var port = process.env.port || 9090;
+var port = process.env.port || 8080;
 var APIrouter = express.Router();
 var WEBrouter = express.Router();
 
@@ -80,11 +80,10 @@ WEBrouter.post("/newUser", function(req, res) {
     }
 });
 
-WEBrouter.post('/logIn', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true })
-);
+WEBrouter.post('/signIn', passport.authenticate('local'), function(req, res) {
+    console.log(req);
+    res.redirect("/");
+});
 
 app.use("/api", passport.authenticate('basic', {session: false}));
 
