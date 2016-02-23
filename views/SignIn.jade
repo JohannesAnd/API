@@ -1,11 +1,10 @@
 extends ./MainMenu.jade
 
-
-
-block content
+block header
     link(href='Form.css', rel='stylesheet')
     link(href='SignIn.css', rel='stylesheet')
 
+block content
     form(action="/signIn", method="post")
         fieldset
 

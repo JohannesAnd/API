@@ -1,10 +1,10 @@
 extends ./MainMenu.jade
 
-
-block content
+block header
     link(href='Form.css', rel='stylesheet')
     link(href='UserList.css', rel='stylesheet')
 
+block content
     #userList
         ul
             each user in users
