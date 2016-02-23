@@ -13,16 +13,6 @@ var webController = require('./controllers/webController');
 var APIController = require('./controllers/APIController');
 var generalController = require('./controllers/generalController');
 
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : process.env.dbuser,
-    password : process.env.dbpassword,
-    database : 'cars'
-});
-
-connection.connect();
-
 passport.use(new HTTPBasicStrat({}, generalController.ValidateUser));
 passport.use(new LocalStrat(generalController.ValidateUser));
 
