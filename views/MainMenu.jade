@@ -12,7 +12,10 @@ html
                 nav(role="full-horizontal")
                     ul
                         li
-                            a(href="/signIn") Sign in
+                            if user
+                                a(href="/signOut") Sign out
+                            else
+                                a(href="/signIn") Sign in
                         li
                             a(href="/users") Users
                         li

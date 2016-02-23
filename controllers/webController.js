@@ -13,7 +13,12 @@ exports.Index = function(req, res) {
 }
 
 exports.SignIn = function(req, res) {
-    res.render("SignIn");
+    res.render("SignIn", {user: req.user});
+}
+
+exports.SignOut = function(req, res) {
+    req.logout();
+    res.redirect("/");
 }
 
 exports.PostSignIn = function(req, res) {
@@ -25,7 +30,7 @@ exports.Users = function(req, res, cb) {
         if (err) {
             return cb(err);
         }
-        res.render("UserList", {users: rows});
+        res.render("UserList", {users: rows, user: req.user});
     });
 }
 
