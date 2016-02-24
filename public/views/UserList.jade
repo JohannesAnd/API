@@ -1,8 +1,9 @@
-extends ./MainMenu.jade
+extends MainMenu
 
 block header
-    link(href='Form.css', rel='stylesheet')
-    link(href='UserList.css', rel='stylesheet')
+    link(href='views/Form.css', rel='stylesheet')
+    link(href='views/UserList.css', rel='stylesheet')
+    script(src='js/checkUsername.js', type='text/javascript')
 
 block content
     #userList
@@ -19,4 +20,5 @@ block content
 
             input(id="password2", name="password2" type="password", placeholder="Repeat password")
 
-            input(type="submit" value="Create user")
+            input(id="submitUser" type="submit" value="Create user")
+            p#usernameHelper

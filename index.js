@@ -16,10 +16,10 @@ var generalController = require('./controllers/generalController');
 passport.use(new HTTPBasicStrat({}, generalController.ValidateUser));
 passport.use(new LocalStrat(generalController.ValidateUser));
 
-app.set('views', './views');
+app.set('views', './public/views');
 app.set('view engine', 'jade');
 
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

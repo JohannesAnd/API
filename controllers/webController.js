@@ -30,6 +30,23 @@ exports.Users = function(req, res, cb) {
     });
 }
 
+exports.CheckUsername = function(req, res, cb) {
+    var name = req.body.name;
+    connection.query("SELECT * FROM Users WHERE name = ?", name, function(err, rows){
+        if (err) {
+            return cb(err);
+        }
+        if (name.length > 1){
+            var valid = rows.length === 0
+            var help = valid ? " " : "Username is already taken!";
+        }else {
+            var valid = false;
+            var help = "Username is too short!";
+        }
+        res.json({valid, help});
+    });
+}
+
 exports.NewUser = function(req, res) {
     var form = req.body;
     var user = {name: form.name, password: form.password};

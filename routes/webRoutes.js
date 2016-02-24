@@ -7,4 +7,5 @@ module.exports = function(app, passport) {
     app.get("/users", webController.Users);
     app.get("/signIn", webController.SignIn);
     app.post("/newUser", webController.NewUser);
+    app.post("/checkUsername", webController.CheckUsername)
 }

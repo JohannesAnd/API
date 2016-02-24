@@ -1,8 +1,9 @@
-extends ./MainMenu.jade
+extends MainMenu
 
 block header
-    link(href='Form.css', rel='stylesheet')
-    link(href='SignIn.css', rel='stylesheet')
+    link(href='views/Form.css', rel='stylesheet')
+    link(href='views/SignIn.css', rel='stylesheet')
+    script(src="js/clock.js" type="text/javascript")
 
 block content
     form(action="/signIn", method="post")
@@ -13,4 +14,4 @@ block content
             input(id="password", name="password" type="password", placeholder="Password")
 
             input(type="submit", value="Sign in")
-
+    p#clock Hei
