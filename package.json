@@ -10,10 +10,13 @@
   "license": "ISC",
   "devDependencies": {
     "body-parser": "^1.14.2",
+    "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "jade": "^1.11.0",
     "mysql": "^2.10.2",
     "passport": "^0.3.2",
-    "passport-http": "^0.3.0"
+    "passport-http": "^0.3.0",
+    "passport-local": "^1.0.0"
   }
 }

@@ -1,6 +1,10 @@
 extends ./MainMenu.jade
 
-block content
+block header
     link(href='index.css', rel='stylesheet')
 
-    p Front page
+block content
+    if user
+        p= "Welcome, " + user.name
+    else
+        p= "Welcome, please log in"
