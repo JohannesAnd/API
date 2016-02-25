@@ -15,3 +15,8 @@ exports.Root = function(req, res){
 exports.GPS = function(req, res) {
     res.json({GPS: req.user.password});
 }
+
+exports.ReceiveData = function(req, res, cb) {
+    
+    res.status(200).send();
+}
