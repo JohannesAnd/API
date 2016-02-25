@@ -43,7 +43,7 @@ exports.CheckUsername = function(req, res, cb) {
             var valid = false;
             var help = "Username is too short!";
         }
-        res.json({valid, help});
+        res.json({valid: valid, help: help});
     });
 }
 
