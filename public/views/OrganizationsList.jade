@@ -1,0 +1,8 @@
+extends MainMenu
+
+block content
+    if user.is_admin
+        h1 Click to make new org
+    for organization in organizations
+        .organization
+            h1= organization.name

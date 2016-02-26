@@ -57,3 +57,10 @@ exports.NewUser = function(req, res) {
         });
     }
 }
+
+exports.OrganizationList = function(req, res, cb) {
+    connection.query("SELECT * FROM Organizations", function(err, rows) {
+        if (err) { return cb(err); }
+        res.render("OrganizationsList", {organizations: rows})
+    });
+}
