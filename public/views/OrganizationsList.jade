@@ -6,3 +6,6 @@ block content
     for organization in organizations
         .organization
             h1= organization.name
+            ul
+            for car in organization.cars
+                li= car

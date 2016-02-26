@@ -59,8 +59,19 @@ exports.NewUser = function(req, res) {
 }
 
 exports.OrganizationList = function(req, res, cb) {
-    connection.query("SELECT * FROM Organizations", function(err, rows) {
+    var query = "SELECT * FROM Organizations AS O JOIN Cars as C ON C.organization_id=O.id";
+
+    connection.query(query, function(err, rows) {
         if (err) { return cb(err); }
-        res.render("OrganizationsList", {organizations: rows})
+        var resDict = {}
+        rows.forEach(function(row) {
+            if (row.id in resDict) {
+                resDict[row.id]["cars"].push(row.registration);
+            } else {
+                resDict[row.id] = row;
+                resDict[row.id]["cars"] = [row.registration]
+            }
+        });
+        res.render("OrganizationsList", {organizations: resDict});
     });
 }
