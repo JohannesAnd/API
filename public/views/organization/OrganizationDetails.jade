@@ -1,0 +1,19 @@
+extends ./../MainMenu
+
+block header
+
+block content
+    h1= org.name
+    if is_admin || user.is_admin
+        a(href="/organizations/" + org.id + "/edit")
+            button Edit
+
+    h2 Members:
+    ul
+    for member in org.members
+        li=member.name
+
+    h2 Cars:
+    ul
+    for car in org.cars
+        li=car.registration

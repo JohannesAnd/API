@@ -25,5 +25,20 @@ module.exports = function(app, passport) {
     app.post("/newUser", webController.NewUser);
     app.post("/checkUsername", webController.CheckUsername);
 
-    app.get("/organizations", ensureAuthenticated, webController.OrganizationList)
+    app.get("/organizations", ensureAuthenticated, webController.OrganizationList);
+    app.get("/organizations/new", ensureAdmin, webController.NewOrganization);
+    app.post("/organizations/new", ensureAdmin, webController.PostNewOrganization);
+    app.get("/organizations/:id", ensureAuthenticated, webController.OrganizationDetails);
+    /*app.get("/organizations/:id/edit", ensureAuthenticated, webController.OrganizationEdit);
+    app.post("/organizations/:id/edit/addUser", ensureAuthenticated, webController.PostOrganizationAddUser);
+    app.post("/organizations/:id/edit/addAdmin", ensureAuthenticated, webController.PostOrganizationAddAdmin);
+    app.post("/organizations/:id/edit/removeUser", ensureAuthenticated, webController.PostOrganizationRemoveUser);
+    app.post("/organizations/:id/edit/removeAdmin", ensureAuthenticated, webController.PostOrganizationRemoveAdmin);
+    app.post("/organizations/:id/edit/addCar", ensureAuthenticated, webController.PostOrganizationAddAdmin);
+    app.post("/organizations/:id/edit/removeCar", ensureAuthenticated, webController.PostOrganizationRemoveUser);
+
+    NB! Må kanskje bruke ajax på noen av disse i bakgrunnen.... Idk.. Må iallefall løses på en elegant måte
+    slik at man kan legge til og promotere brukere samt opprette biler til organisasjonen i realtime med oppdateringer av lister
+    NB2! Tror jeg har glemt noe admin-validering, men er trøtt
+    */
 }

@@ -1,0 +1,13 @@
+extends ./../MainMenu
+
+block header
+    link(href='/views/Form.css', rel='stylesheet')
+
+block content
+    a(href="/organizations")
+        button <= back
+    h1 Create a new Organization
+    form(action="/organizations/new" method="post")
+        fieldset
+            input(id="name" name="name" type="text" value="" placeholder="Organization Name" pattern=".{3,}" required title="Minimum 3 letters")
+            input(type="submit" value="Create Organization")

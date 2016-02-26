@@ -1,0 +1,14 @@
+extends ../MainMenu
+
+block content
+    if user.is_admin
+        a(href="/organizations/new")
+            button Make new org
+    for organization in organizations
+        .organization
+            h1
+                a(href="organizations/"+organization.id)= organization.name
+            ul
+            for car in organization.cars
+                if car
+                    li= car

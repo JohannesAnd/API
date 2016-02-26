@@ -1,9 +1,9 @@
 extends MainMenu
 
 block header
-    link(href='views/Form.css', rel='stylesheet')
-    link(href='views/SignIn.css', rel='stylesheet')
-    script(src="js/clock.js" type="text/javascript")
+    link(href='/views/Form.css', rel='stylesheet')
+    link(href='/views/SignIn.css', rel='stylesheet')
+    script(src="/js/clock.js" type="text/javascript")
 
 block content
     form(action="/signIn", method="post")
