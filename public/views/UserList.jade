@@ -2,6 +2,8 @@ extends MainMenu
 
 block header
     script(src='js/checkUsername.js', type='text/javascript')
+    script(src="https://maps.googleapis.com/maps/api/js" type="text/javascript")
+    script(src='js/map.js', type='text/javascript')
 
 block content
     #userList
@@ -20,3 +22,5 @@ block content
 
                 input(id="submitUser" type="submit" value="Create user" disabled)
                 p#usernameHelper
+
+    div#map_canvas
