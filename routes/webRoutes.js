@@ -25,6 +25,8 @@ module.exports = function(app, passport) {
     app.post("/newUser", webController.NewUser);
     app.post("/checkUsername", webController.CheckUsername);
 
+    app.get("/car/:registration", webController.CarDetails);
+
     app.get("/organizations", ensureAuthenticated, webController.OrganizationList);
     app.get("/organizations/new", ensureAdmin, webController.NewOrganization);
     app.post("/organizations/new", ensureAdmin, webController.PostNewOrganization);

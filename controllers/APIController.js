@@ -20,3 +20,12 @@ exports.ReceiveData = function(req, res, cb) {
     
     res.status(200).send();
 }
+
+exports.PostTripVertex = function(req, res, cb) {
+    var query = "INSERT INTO TripVertices SET ?";
+    console.log(req.body);
+    connection.query(query, req.body, function(err, rows){
+        if (err) { return cb(err)}
+        res.status(200).send();
+    });
+}

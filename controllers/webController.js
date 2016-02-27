@@ -8,6 +8,8 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+var carService = require('./../services/carService');
+
 exports.Index = function(req, res) {
     res.render('Index');
 }
@@ -115,3 +117,11 @@ exports.OrganizationDetails = function(req, res, cb) {
         });
     });
 }
+
+exports.CarDetails = function(req, res, cb) {
+    carService.getCarDetails(req.params.registration, function(err, data){
+        if (err) { return cb(err)}
+        res.render("car/CarDetails", {registration: req.params.registration, data: data});
+    });
+}
+

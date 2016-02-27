@@ -1,0 +1,17 @@
+extends ./../MainMenu
+
+block content
+    h1= registration
+
+    table
+        tr
+            th Latitude
+            th Longitude
+            th Speed
+            th Time
+        for row in data
+            tr
+                td=row.latitude
+                td=row.longitude
+                td=row.speed
+                td=row.registration_time
