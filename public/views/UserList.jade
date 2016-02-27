@@ -1,8 +1,6 @@
 extends MainMenu
 
 block header
-    link(href='views/Form.css', rel='stylesheet')
-    link(href='views/UserList.css', rel='stylesheet')
     script(src='js/checkUsername.js', type='text/javascript')
 
 block content
@@ -10,15 +8,15 @@ block content
         ul
             each user in users
                 li= user.name
+    .form
+        form(action="/newUser", method="post")
+            fieldset
 
-    form(action="/newUser", method="post")
-        fieldset
+                input(id="name", name="name" type="text", value="", placeholder="Name")
 
-            input(id="name", name="name" type="text", value="", placeholder="Name")
+                input(id="password", name="password" type="password", placeholder="Password")
 
-            input(id="password", name="password" type="password", placeholder="Password")
+                input(id="password2", name="password2" type="password", placeholder="Repeat password")
 
-            input(id="password2", name="password2" type="password", placeholder="Repeat password")
-
-            input(id="submitUser" type="submit" value="Create user")
-            p#usernameHelper
+                input(id="submitUser" type="submit" value="Create user" disabled)
+                p#usernameHelper
