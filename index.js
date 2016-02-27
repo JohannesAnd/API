@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 
+var sassMiddleware = require('node-sass-middleware');
+var path = require('path');
+
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
@@ -18,6 +21,12 @@ passport.use(new LocalStrat(generalController.ValidateUser));
 
 app.set('views', './public/views');
 app.set('view engine', 'jade');
+app.use(sassMiddleware({
+    src: path.join(__dirname, 'sass'),
+    dest: path.join(__dirname, 'public'),
+    debug: true,
+    outputStyle: 'compressed'
+}));
 
 app.use(express.static(__dirname + '/public'));
 

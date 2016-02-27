@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS OrgMembers(
     role VARCHAR(10) NOT NULL,
     FOREIGN KEY(user_id) REFERENCES Users(id),
     FOREIGN KEY(org_id) REFERENCES Organizations(id),
-    PRIMARY KEY(user_id, org_id)
+   PRIMARY KEY(user_id, org_id)
 );
 
 INSERT INTO Users VALUES(null, true, "Admin", "1234");

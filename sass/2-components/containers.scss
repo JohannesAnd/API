@@ -1,0 +1,26 @@
+.container {
+	max-width: $pageWidth;
+	margin: auto;
+	padding: 15px;
+	min-height: 100%;
+}
+
+.header {
+
+}
+
+.content {
+	border: $border;
+	margin-bottom: 5px;
+	margin-top: 10px;
+	padding: 3%;
+	border-top-left-radius: $border-radius;
+	border-top-right-radius: $border-radius;
+}
+
+.footer {
+	border: $border;
+	border-bottom-left-radius: $border-radius;
+	border-bottom-right-radius: $border-radius;
+	min-height: 20px;
+}
