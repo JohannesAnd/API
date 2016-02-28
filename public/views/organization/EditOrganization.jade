@@ -1,0 +1,24 @@
+extends ./../MainMenu
+
+block header
+    script(type="text/javascript").
+        var orgID = !{org.id};
+    script(src='/js/editOrganization.js', type='text/javascript')
+
+block content
+    h1= org.name
+
+    .threeEvenColumns
+        .column1
+            h1 Members
+            select(id="members" name="member" multiple="multiple")
+            button Add to admins
+            button Remove from organization
+        .column2
+            h1 Admins
+            select(id="admins" name="admins" multiple="multiple")
+            button Remove from admins
+        .column3
+            h1 Users
+            select(id="users" name="users" multiple="multiple")
+            button Add to organization

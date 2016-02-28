@@ -1,0 +1,6 @@
+.twoEvenColumns {
+	@include outer-container;
+	.column1, .column2 {
+		@include span-columns(6);
+	}
+}

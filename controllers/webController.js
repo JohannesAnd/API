@@ -9,6 +9,7 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var carService = require('./../services/carService');
+var organizationService = require('./../services/organizationService');
 
 exports.Index = function(req, res) {
     res.render('Index');
@@ -125,3 +126,38 @@ exports.CarDetails = function(req, res, cb) {
     });
 }
 
+exports.EditOrganization = function(req, res, cb) {
+    var id = req.params.id;
+    console.log(id);
+    organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
+        if (err) { return cb(err)}
+        console.log("IsAdmin? : " + isAdmin);
+        if (isAdmin) {
+            var query = "SELECT * FROM Organizations WHERE id = ?";
+            connection.query(query, id, function(err, rows) {
+                console.log(rows);
+                res.render("organization/EditOrganization", {org: rows[0]});
+            });
+        } else{
+            res.redirect("/organizations/" + id);
+        }
+    });
+}
+
+exports.GetOrgUsers = function(req, res, cb) {
+    var query = "SELECT DISTINCT U.name, U.id, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
+    connection.query(query, req.params.id, function(err, rows) {
+        if (err) { return cb(err)}
+        var results = {members: [], admins: [], users: []};
+        rows.forEach(function(row){
+            if (row.role === "Admin" && row.org_id === parseInt(req.params.id)) {
+                results.admins.push(row);
+            }else if (row.role === "Member" && row.org_id === parseInt(req.params.id)){
+                results.members.push(row);
+            }else { //Shows some users twice.. Must fix
+                results.users.push(row);
+            }
+        });
+        res.json({users: results});
+    });
+}
