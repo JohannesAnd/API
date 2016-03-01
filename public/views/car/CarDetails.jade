@@ -1,17 +1,16 @@
 extends ./../MainMenu
 
+block header
+    script(type="text/javascript").
+        var registration = "#{registration}";
+    script(type="text/javascript" src="/js/carDetails.js")
+
 block content
     h1= registration
 
-    table
+    table#carTable
         tr
             th Latitude
             th Longitude
             th Speed
             th Time
-        for row in data
-            tr
-                td=row.latitude
-                td=row.longitude
-                td=row.speed
-                td=row.registration_time

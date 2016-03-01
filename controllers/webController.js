@@ -122,20 +122,23 @@ exports.OrganizationDetails = function(req, res, cb) {
 exports.CarDetails = function(req, res, cb) {
     carService.getCarDetails(req.params.registration, function(err, data){
         if (err) { return cb(err)}
-        res.render("car/CarDetails", {registration: req.params.registration, data: data});
+        res.render("car/CarDetails", {registration: req.params.registration});
+    });
+}
+
+exports.GetCarDetails = function(req, res, cb) {
+    carService.getCarDetails(req.params.registration, function(err, data) {
+        res.json({data: data});
     });
 }
 
 exports.EditOrganization = function(req, res, cb) {
     var id = req.params.id;
-    console.log(id);
     organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
         if (err) { return cb(err)}
-        console.log("IsAdmin? : " + isAdmin);
         if (isAdmin) {
             var query = "SELECT * FROM Organizations WHERE id = ?";
             connection.query(query, id, function(err, rows) {
-                console.log(rows);
                 res.render("organization/EditOrganization", {org: rows[0]});
             });
         } else{
