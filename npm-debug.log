@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'ci-lint' ]
+2 info using npm@2.14.3
+3 info using node@v4.1.0
+4 verbose run-script [ 'preci-lint', 'ci-lint', 'postci-lint' ]
+5 info preci-lint carapi@0.0.1
+6 info ci-lint carapi@0.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info carapi@0.0.1 Failed to exec ci-lint script
+9 verbose stack Error: carapi@0.0.1 ci-lint: `eslint --ext .js --ext .jsx --ignore-pattern react --ignore-path .gitignore . --no-eslintrc --config .ci_eslintrc.js && eslint --ext .js --ext .jsx --ignore-path .gitignore react --no-eslintrc --config react/.ci_eslintrc.js`
+9 verbose stack Exit status 1
+9 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:214:16)
+9 verbose stack     at emitTwo (events.js:87:13)
+9 verbose stack     at EventEmitter.emit (events.js:172:7)
+9 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+9 verbose stack     at emitTwo (events.js:87:13)
+9 verbose stack     at ChildProcess.emit (events.js:172:7)
+9 verbose stack     at maybeClose (internal/child_process.js:817:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+10 verbose pkgid carapi@0.0.1
+11 verbose cwd C:\Users\Johannes\WebstormProjects\API
+12 error Windows_NT 10.0.10240
+13 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "ci-lint"
+14 error node v4.1.0
+15 error npm  v2.14.3
+16 error code ELIFECYCLE
+17 error carapi@0.0.1 ci-lint: `eslint --ext .js --ext .jsx --ignore-pattern react --ignore-path .gitignore . --no-eslintrc --config .ci_eslintrc.js && eslint --ext .js --ext .jsx --ignore-path .gitignore react --no-eslintrc --config react/.ci_eslintrc.js`
+17 error Exit status 1
+18 error Failed at the carapi@0.0.1 ci-lint script 'eslint --ext .js --ext .jsx --ignore-pattern react --ignore-path .gitignore . --no-eslintrc --config .ci_eslintrc.js && eslint --ext .js --ext .jsx --ignore-path .gitignore react --no-eslintrc --config react/.ci_eslintrc.js'.
+18 error This is most likely a problem with the carapi package,
+18 error not with npm itself.
+18 error Tell the author that this fails on your system:
+18 error     eslint --ext .js --ext .jsx --ignore-pattern react --ignore-path .gitignore . --no-eslintrc --config .ci_eslintrc.js && eslint --ext .js --ext .jsx --ignore-path .gitignore react --no-eslintrc --config react/.ci_eslintrc.js
+18 error You can get their info via:
+18 error     npm owner ls carapi
+18 error There is likely additional logging output above.
+19 verbose exit [ 1, true ]
