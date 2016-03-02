@@ -1,30 +1,30 @@
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : process.env.dbuser,
-    password : process.env.dbpassword,
-    database : 'cars'
+const mysql = require("mysql");
+const connection = mysql.createConnection({
+    host: "localhost",
+    user: process.env.dbuser,
+    password: process.env.dbpassword,
+    database: "cars"
 });
 
 connection.connect();
 
-var carService = require('./../services/carService');
-var organizationService = require('./../services/organizationService');
+const carService = require("./../services/carService");
+const organizationService = require("./../services/organizationService");
 
-exports.Index = function(req, res) {
-    res.render('Index');
+exports.Index = function index(req, res) {
+    res.render("Index");
 }
 
-exports.SignIn = function(req, res) {
+exports.SignIn = function signIn(req, res) {
     res.render("SignIn");
 }
 
-exports.SignOut = function(req, res) {
+exports.SignOut = function signOut(req, res) {
     req.logout();
     res.redirect("/");
 }
 
-exports.Users = function(req, res, cb) {
+exports.Users = function users(req, res, cb) {
     connection.query("SELECT * from Users", function (err, rows) {
         if (err) {
             return cb(err);
@@ -33,8 +33,8 @@ exports.Users = function(req, res, cb) {
     });
 }
 
-exports.CheckUsername = function(req, res, cb) {
-    var name = req.body.name;
+exports.CheckUsername = function checkUsername(req, res, cb) {
+    const name = req.body.name;
     connection.query("SELECT * FROM Users WHERE name = ?", name, function(err, rows){
         if (err) {
             return cb(err);
@@ -50,9 +50,9 @@ exports.CheckUsername = function(req, res, cb) {
     });
 }
 
-exports.NewUser = function(req, res) {
-    var form = req.body;
-    var user = {name: form.name, password: form.password};
+exports.NewUser = function newUser(req, res) {
+    const form = req.body;
+    const user = {name: form.name, password: form.password};
     if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
         connection.query("INSERT INTO Users SET ?", user, function(err, rows){
             if (err) { return cb(err);}
@@ -61,11 +61,13 @@ exports.NewUser = function(req, res) {
     }
 }
 
-exports.OrganizationList = function(req, res, cb) {
-    var query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
+exports.OrganizationList = function orgList(req, res, cb) {
+    const query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
 
     connection.query(query, function(err, rows) {
-        if (err) { return cb(err); }
+        if (err) {
+            return cb(err);
+        }
         var resDict = {}
         rows.forEach(function(row) {
             if (row.id in resDict) {
@@ -79,11 +81,11 @@ exports.OrganizationList = function(req, res, cb) {
     });
 }
 
-exports.NewOrganization = function(req, res) {
+exports.NewOrganization = function newOrg(req, res) {
     res.render("organization/NewOrganization");
 }
 
-exports.PostNewOrganization = function(req, res, cb) {
+exports.PostNewOrganization = function postNewOrg(req, res, cb) {
     var name = req.body.name;
     var query = "INSERT INTO Organizations VALUES(null, ?)";
     connection.query(query, name, function(err) {
@@ -92,7 +94,7 @@ exports.PostNewOrganization = function(req, res, cb) {
     });
 }
 
-exports.OrganizationDetails = function(req, res, cb) {
+exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var org = {};
     var isAdmin;
     var id = req.params.id;
@@ -119,20 +121,20 @@ exports.OrganizationDetails = function(req, res, cb) {
     });
 }
 
-exports.CarDetails = function(req, res, cb) {
+exports.CarDetails = function carDetails(req, res, cb) {
     carService.getCarDetails(req.params.registration, function(err, data){
         if (err) { return cb(err)}
         res.render("car/CarDetails", {registration: req.params.registration});
     });
 }
 
-exports.GetCarDetails = function(req, res, cb) {
+exports.GetCarDetails = function getCarDetails(req, res, cb) {
     carService.getCarDetails(req.params.registration, function(err, data) {
         res.json({data: data});
     });
 }
 
-exports.EditOrganization = function(req, res, cb) {
+exports.EditOrganization = function editOrg(req, res, cb) {
     var id = req.params.id;
     organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
         if (err) { return cb(err)}
@@ -147,7 +149,7 @@ exports.EditOrganization = function(req, res, cb) {
     });
 }
 
-exports.GetOrgUsers = function(req, res, cb) {
+exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
     var query = "SELECT DISTINCT U.name, U.id, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
     connection.query(query, req.params.id, function(err, rows) {
         if (err) { return cb(err)}
