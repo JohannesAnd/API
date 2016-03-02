@@ -1,4 +1,4 @@
-var webController = require('./../controllers/webController');
+var webController = require("./../controllers/webController");
 
 function ensureAuthenticated(req, res, next) {
     if (req.user) {
@@ -18,8 +18,8 @@ function ensureAdmin(req, res, next) {
 
 module.exports = function(app, passport) {
     app.get("/", webController.Index);
-    app.post('/signIn', passport.authenticate('local', {successRedirect: "/", failureRedirect: "/signIn"}));
-    app.get('/signOut', webController.SignOut);
+    app.post("/signIn", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/signIn"}));
+    app.get("/signOut", webController.SignOut);
     app.get("/users", webController.Users);
     app.get("/signIn", webController.SignIn);
     app.post("/newUser", webController.NewUser);
@@ -45,4 +45,4 @@ module.exports = function(app, passport) {
     slik at man kan legge til og promotere brukere samt opprette biler til organisasjonen i realtime med oppdateringer av lister
     NB2! Tror jeg har glemt noe admin-validering, men er trøtt
     */
-}
+};

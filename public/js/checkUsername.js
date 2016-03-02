@@ -3,9 +3,8 @@ function checkUsername(name) {
         url: "/checkUsername",
         type: "POST",
         cache: false,
-        data: {name},
+        data: {name: name},
         success: function(data) {
-            console.log(data);
             $("#submitUser").attr("disabled", !data.valid);
             $("#usernameHelper").text(data.help);
         }

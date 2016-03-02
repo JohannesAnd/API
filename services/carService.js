@@ -1,9 +1,9 @@
-var mysql      = require('mysql');
+var mysql      = require("mysql");
 var connection = mysql.createConnection({
-    host     : 'localhost',
+    host     : "localhost",
     user     : process.env.dbuser,
     password : process.env.dbpassword,
-    database : 'cars'
+    database : "cars"
 });
 
 connection.connect();
@@ -13,4 +13,4 @@ exports.getCarDetails = function(registration, cb) {
     connection.query(query, registration, function(err, rows) {
         cb(null, rows);
     });
-}
+};

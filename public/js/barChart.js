@@ -1,4 +1,4 @@
-var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+var randomScalingFactor = function(){ return Math.round(Math.random()*100);};
 
 var barChartData = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -18,8 +18,7 @@ var barChartData = {
             data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
         }
     ]
-
-}
+};
 
 $(document).ready(function () {
     var ctx = document.getElementById("chart").getContext("2d");
