@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    function updateTable() {
+    function updateTable(){
         $.ajax({
-            url: "/car/" + registration + "/trip",
+            url: "/car/" + id + "/trip",
             type: "get",
             cache: false,
-            data: {name},
+            data: {},
             success: function (data) {
                 var header =
                     "<tr>" +
@@ -27,5 +27,5 @@ $(document).ready(function() {
         });
     }
     updateTable();
-    var update = setInterval(updateTable, 1000);
+    setInterval(updateTable, 1000);
 });

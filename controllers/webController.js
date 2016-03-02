@@ -1,5 +1,5 @@
-const mysql = require("mysql");
-const connection = mysql.createConnection({
+var mysql = require("mysql");
+var connection = mysql.createConnection({
     host: "localhost",
     user: process.env.dbuser,
     password: process.env.dbpassword,
@@ -8,21 +8,21 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-const carService = require("./../services/carService");
-const organizationService = require("./../services/organizationService");
+var carService = require("./../services/carService");
+var organizationService = require("./../services/organizationService");
 
 exports.Index = function index(req, res) {
     res.render("Index");
-}
+};
 
 exports.SignIn = function signIn(req, res) {
     res.render("SignIn");
-}
+};
 
 exports.SignOut = function signOut(req, res) {
     req.logout();
     res.redirect("/");
-}
+};
 
 exports.Users = function users(req, res, cb) {
     connection.query("SELECT * from Users", function (err, rows) {
@@ -31,68 +31,67 @@ exports.Users = function users(req, res, cb) {
         }
         res.render("UserList", {users: rows});
     });
-}
+};
 
 exports.CheckUsername = function checkUsername(req, res, cb) {
-    const name = req.body.name;
+    var name = req.body.name;
+    var valid = false;
+    var help = "Username is too short!";
     connection.query("SELECT * FROM Users WHERE name = ?", name, function(err, rows){
         if (err) {
             return cb(err);
         }
         if (name.length > 1){
-            var valid = rows.length === 0
-            var help = valid ? " " : "Username is already taken!";
-        }else {
-            var valid = false;
-            var help = "Username is too short!";
+            valid = rows.length === 0;
+            help = valid ? " " : "Username is already taken!";
         }
         res.json({valid: valid, help: help});
     });
-}
+};
 
-exports.NewUser = function newUser(req, res) {
-    const form = req.body;
-    const user = {name: form.name, password: form.password};
+exports.NewUser = function newUser(req, res, cb) {
+    var form = req.body;
+    var user = {name: form.name, password: form.password};
     if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
-        connection.query("INSERT INTO Users SET ?", user, function(err, rows){
+        connection.query("INSERT INTO Users SET ?", user, function(err){
             if (err) { return cb(err);}
             res.redirect("/users");
         });
     }
-}
+};
 
 exports.OrganizationList = function orgList(req, res, cb) {
-    const query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
+    var query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
 
     connection.query(query, function(err, rows) {
         if (err) {
             return cb(err);
         }
-        var resDict = {}
+        var resDict = {};
         rows.forEach(function(row) {
             if (row.id in resDict) {
                 resDict[row.id]["cars"].push(row.registration);
             } else {
                 resDict[row.id] = row;
-                resDict[row.id]["cars"] = [row.registration]
+                resDict[row.id]["cars"] = [row.registration];
             }
         });
         res.render("organization/OrganizationsList", {organizations: resDict});
     });
-}
+};
 
 exports.NewOrganization = function newOrg(req, res) {
     res.render("organization/NewOrganization");
-}
+};
 
 exports.PostNewOrganization = function postNewOrg(req, res, cb) {
     var name = req.body.name;
     var query = "INSERT INTO Organizations VALUES(null, ?)";
-    connection.query(query, name, function(err) {
+    connection.query(query, name, function(err){
         if (err) { return cb(err); }
         res.redirect("/organizations");
     });
-}
+};
 
 exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var org = {};
@@ -119,25 +118,25 @@ exports.OrganizationDetails = function orgDetails(req, res, cb) {
             });
         });
     });
-}
+};
 
 exports.CarDetails = function carDetails(req, res, cb) {
-    carService.getCarDetails(req.params.registration, function(err, data){
-        if (err) { return cb(err)}
+    carService.getCarDetails(req.params.registration, function(err){
+        if (err) { return cb(err); }
         res.render("car/CarDetails", {registration: req.params.registration});
     });
-}
+};
 
-exports.GetCarDetails = function getCarDetails(req, res, cb) {
+exports.GetCarDetails = function getCarDetails(req, res) {
     carService.getCarDetails(req.params.registration, function(err, data) {
         res.json({data: data});
     });
-}
+};
 
 exports.EditOrganization = function editOrg(req, res, cb) {
     var id = req.params.id;
     organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
-        if (err) { return cb(err)}
+        if (err) { return cb(err); }
         if (isAdmin) {
             var query = "SELECT * FROM Organizations WHERE id = ?";
             connection.query(query, id, function(err, rows) {
@@ -147,12 +146,12 @@ exports.EditOrganization = function editOrg(req, res, cb) {
             res.redirect("/organizations/" + id);
         }
     });
-}
+};
 
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
     var query = "SELECT DISTINCT U.name, U.id, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
     connection.query(query, req.params.id, function(err, rows) {
-        if (err) { return cb(err)}
+        if (err) { return cb(err); }
         var results = {members: [], admins: [], users: []};
         rows.forEach(function(row){
             if (row.role === "Admin" && row.org_id === parseInt(req.params.id)) {
@@ -165,4 +164,4 @@ exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
         });
         res.json({users: results});
     });
-}
+};
