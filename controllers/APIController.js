@@ -22,7 +22,14 @@ exports.ReceiveData = function(req, res) {
 
 exports.PostTripVertex = function(req, res, cb) {
     var query = "INSERT INTO TripVertices SET ?";
-    connection.query(query, req.body, function(err){
+    var data = {
+        registration: req.body.registration,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+        speed: req.body.speed,
+        registration_time: req.body.registration_time
+    };
+    connection.query(query, data, function(err){
         if (err) { return cb(err);}
         res.status(200).send();
     });
