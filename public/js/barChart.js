@@ -21,7 +21,6 @@ var barChartData = {
 };
 
 $(document).ready(function () {
-    Alert("Hey");
     var ctx = document.getElementById("chart").getContext("2d");
     window.myBar = new Chart(ctx).Bar(barChartData, {
         responsive: true
