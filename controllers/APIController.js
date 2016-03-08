@@ -20,7 +20,7 @@ exports.ReceiveData = function(req, res) {
     res.status(200).send();
 };
 
-exports.PostTripVertex = function(req, res, cb) {
+exports.PostTripVertex = function(req, res) {
     res.status(200).send();
     /*
     Needs updating
