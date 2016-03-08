@@ -35,14 +35,29 @@ CREATE TABLE IF NOT EXISTS OrgMembers(
    PRIMARY KEY(user_id, org_id)
 );
 
+
+CREATE TABLE IF NOT EXISTS Trips(
+    id VARCHAR(100) NOT NULL,
+    car_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE IF NOT EXISTS TripVertices(
-    registration VARCHAR(10) NOT NULL,
+    trip_id VARCHAR(100) NOT NULL,
     longitude DOUBLE,
     latitude DOUBLE,
     speed DOUBLE,
+    altitude DOUBLE,
+    coolant_temp DOUBLE,
+    engine_load DOUBLE,
+    fuel_pressure DOUBLE,
+    intake_air_temp DOUBLE,
+    rmp INT,
+    error_msg VARCHAR(1000),
     registration_time DATETIME(3) NOT NULL,
-    FOREIGN KEY(registration) REFERENCES Cars(registration),
-    PRIMARY KEY(registration, registration_time)
+    FOREIGN KEY(trip_id) REFERENCES Trips(id),
+    PRIMARY KEY(trip_id, registration_time)
 );
 
 INSERT INTO Users VALUES(null, true, "Admin", "1234");
@@ -51,5 +66,3 @@ INSERT INTO Organizations VALUES(null, "MinOrg");
 INSERT INTO Cars VALUES("EN12325", "Lada", "Shitwagon", 1839, 1);
 INSERT INTO Cars VALUES("EN53325", "Lada", "Snailmobile", 1019, 1);
 INSERT INTO OrgMembers VALUES(1, 1, "Member");
-INSERT INTO TripVertices VALUES("EN12325", 20.19382, 19.23874, 45.2, '2016-02-10 10:43:21.384321');
-INSERT INTO TripVertices VALUES("EN12325", 20.19743, 19.25732, 45.9, '2016-02-10 10:43:22.384321');
