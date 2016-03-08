@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS TripVertices(
     intake_air_temp DOUBLE,
     rmp INT,
     error_msg VARCHAR(1000),
-    registration_time DATETIME(3) NOT NULL,
+    registration_time DATETIME(3) NOT NULL DEFAULT NOW(),
     FOREIGN KEY(trip_id) REFERENCES Trips(id),
     PRIMARY KEY(trip_id, registration_time)
 );
