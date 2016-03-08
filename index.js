@@ -22,7 +22,7 @@ app.set("view engine", "jade");
 app.use(sassMiddleware({
     src: path.join(__dirname, "sass"),
     dest: path.join(__dirname, "public"),
-    debug: true,
+    debug: false,
     outputStyle: "compressed"
 }));
 
