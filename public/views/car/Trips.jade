@@ -1,0 +1,8 @@
+extends ./../MainMenu
+
+block content
+    h1= "Trips by " + registration
+    ul
+        each trip in trips
+            li
+                a(href="/car/"+registration+"/"+trip.id)= trip.id

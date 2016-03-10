@@ -148,6 +148,22 @@ exports.EditOrganization = function editOrg(req, res, cb) {
     });
 };
 
+exports.GetCarTrips = function getCarTrips(req, res, cb) {
+    var query = "SELECT * FROM Trips WHERE car_id LIKE ?";
+    connection.query(query, req.params.registration, function(err, rows){
+        if (err) { return cb(err); }
+        res.render("car/Trips", {trips: rows, registration: req.params.registration});
+    });
+};
+
+exports.GetCarTrip = function getCarTrip(req, res, cb) {
+    var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ?";
+    connection.query(query, req.params.trip, function(err, rows){
+        if (err) { return cb(err); }
+        res.render("car/Trip", {tripID: req.params.trip, vertices: rows});
+    });
+};
+
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
     var query = "SELECT DISTINCT U.name, U.id, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
     connection.query(query, req.params.id, function(err, rows) {

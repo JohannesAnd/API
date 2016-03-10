@@ -1,0 +1,18 @@
+extends ./../MainMenu
+
+block content
+    h1= "Trip " + tripID
+    table
+        tr
+            th Latitude
+            th Longitude
+            th Altitude
+            th Speed
+            th Time
+        each vertex in vertices
+            tr
+                td= vertex.latitude
+                td= vertex.longitude
+                td= vertex.altitude
+                td= vertex.speed
+                td= vertex.registration_time
