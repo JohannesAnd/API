@@ -21,9 +21,9 @@ exports.ReceiveData = function(req, res) {
 };
 
 exports.PostTripVertex = function(req, res, cb) {
-    console.log(req.body);
+    var data = {};
     if (req.body.type === "trip") {
-        var data = {
+        data = {
             "id": req.body.trip_id,
             "user_id": req.body.user_id,
             "car_id": req.body.car_id
@@ -33,7 +33,7 @@ exports.PostTripVertex = function(req, res, cb) {
             res.status(200).send();
         });
     } else if (req.body.type === "data") {
-        var data = {
+        data = {
             trip_id: req.body.trip_id,
             longitude: req.body.longitude,
             latitude: req.body.latitude,
