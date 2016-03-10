@@ -21,19 +21,16 @@ exports.ReceiveData = function(req, res) {
 };
 
 exports.PostTripVertex = function(req, res, cb) {
-    res.status(200).send();
+    console.log(req.body);
     if (req.body.type === "trip") {
-        connection.query("SELECT * FROM Users WHERE name=?", req.body.user_name, function(err, rows){
-            var id = rows[0].id;
-            var data = {
-                "id": req.body.trip_id,
-                "user_id": id,
-                "car_id": req.body.car_registration
-            };
-            connection.query("INSERT INTO Trips SET ?", data, function(err){
-                if (err) { return cb(err);}
-                res.status(200).send();
-            });
+        var data = {
+            "id": req.body.trip_id,
+            "user_id": req.body.user_id,
+            "car_id": req.body.car_id
+        };
+        connection.query("INSERT INTO Trips SET ?", data, function(err){
+            if (err) { return cb(err);}
+            res.status(200).send();
         });
     } else if (req.body.type === "data") {
         var data = {
