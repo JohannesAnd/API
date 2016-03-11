@@ -20,11 +20,11 @@ exports.ValidateUser = function validateUser(username, password, cb) {
 };
 
 exports.SerializeUser = function(user, done){
-    done(null, user.id);
+    done(null, user.name);
 };
 
-exports.DeserializeUser = function(id, done){
-    connection.query("SELECT * FROM Users WHERE id=?", id, function(err, rows){
+exports.DeserializeUser = function(name, done){
+    connection.query("SELECT * FROM Users WHERE name=?", name, function(err, rows){
         if (err) {return done(err);}
         done(null, rows[0]);
     });
