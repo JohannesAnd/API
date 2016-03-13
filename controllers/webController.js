@@ -99,7 +99,7 @@ exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var id = req.params.id;
     var orgQuery = "SELECT * FROM Organizations AS O WHERE O.id = ?";
     var carQuery = "SELECT * FROM Cars AS C WHERE C.organization_id = ?";
-    var userQuery = "SELECT * FROM OrgMembers as O JOIN Users AS U ON U.id=O.user_id WHERE O.org_id = ?";
+    var userQuery = "SELECT * FROM OrgMembers as O JOIN Users AS U ON U.name=O.user_id WHERE O.org_id = ?";
     connection.query(orgQuery, id, function(err, rows) {
         if (err) { return cb(err); }
         org = rows[0];

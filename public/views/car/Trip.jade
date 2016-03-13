@@ -8,6 +8,12 @@ block content
             th Longitude
             th Altitude
             th Speed
+            th Coolant Temp
+            th Engine Load
+            th Fuel Pressure
+            th Intake Air Temp
+            th RPM
+            th Errors
             th Time
         each vertex in vertices
             tr
@@ -15,4 +21,10 @@ block content
                 td= vertex.longitude
                 td= vertex.altitude
                 td= vertex.speed
+                td= vertex.coolant_temp
+                td= vertex.engine_load
+                td= vertex.fuel_pressure
+                td= vertex.intake_air_temp
+                td= vertex.rpm
+                td= vertex.error_msg
                 td= vertex.registration_time

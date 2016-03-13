@@ -16,4 +16,5 @@ block content
     h2 Cars:
     ul
     for car in org.cars
-        li=car.registration
+        li
+            a(href="/car/" + car.registration + "/trips")= car.registration
