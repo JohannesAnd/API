@@ -165,7 +165,7 @@ exports.GetCarTrip = function getCarTrip(req, res, cb) {
 };
 
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
-    var query = "SELECT DISTINCT U.name, U.id, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
+    var query = "SELECT DISTINCT U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.name ORDER BY U.name ASC";
     connection.query(query, req.params.id, function(err, rows) {
         if (err) { return cb(err); }
         var results = {members: [], admins: [], users: []};
@@ -180,4 +180,14 @@ exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
         });
         res.json({users: results});
     });
+};
+
+exports.NewCar = function NewCar(req, res, cb) {
+    var query = "INSERT INTO Cars VALUES(?, ?, ?, ?, ?)";
+    connection.query(query,
+        [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.id],
+        function(err){
+            if (err) { return cb(err); }
+            res.redirect("/organizations/" + req.params.id + "/edit");
+        });
 };
