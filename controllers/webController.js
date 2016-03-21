@@ -11,8 +11,8 @@ connection.connect();
 var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
 
-exports.Index = function index(req, res) {
-    res.render("Index");
+exports.Landing = function Landing(req, res) {
+    res.render("Landing");
 };
 
 exports.SignIn = function signIn(req, res) {

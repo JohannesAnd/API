@@ -17,8 +17,8 @@ function ensureAdmin(req, res, next) {
 }
 
 module.exports = function(app, passport) {
-    app.get("/", webController.Index);
-    app.post("/signIn", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/signIn"}));
+    app.get("/", webController.Landing);
+    app.post("/signIn", passport.authenticate("local", {successRedirect: "/users", failureRedirect: "/"}));
     app.get("/signOut", webController.SignOut);
     app.get("/users", webController.Users);
     app.get("/signIn", webController.SignIn);

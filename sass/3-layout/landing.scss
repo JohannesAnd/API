@@ -1,0 +1,19 @@
+#landing {
+	height: 100vh;
+	background-size: cover;
+	background-image: url('/images/BG.jpg');
+	position: relative;
+}
+#landingForm {
+	position: absolute;
+	margin: auto;
+	top: 15%;
+	left: 0;
+	right: 0;
+	img {
+		display: block;
+		margin: 0 auto;
+		padding: 10%;
+	}
+	max-width: 300px;
+}

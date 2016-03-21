@@ -36,16 +36,17 @@ CREATE TABLE IF NOT EXISTS OrgMembers(
 
 
 CREATE TABLE IF NOT EXISTS Trips(
-    id VARCHAR(100) NOT NULL,
     car_id VARCHAR(10) NOT NULL,
     user_id VARCHAR(40) NOT NULL,
-    PRIMARY KEY(id),
+    start_time DATETIME(3) NOT NULL,
+    PRIMARY KEY(car_id, start_time),
     FOREIGN KEY(user_id) REFERENCES Users(name),
     FOREIGN KEY(car_id) REFERENCES Cars(registration)
 );
 
 CREATE TABLE IF NOT EXISTS TripVertices(
-    trip_id VARCHAR(100) NOT NULL,
+    car_id VARCHAR(100) NOT NULL,
+    start_time DATETIME(3) NOT NULL,
     longitude DOUBLE,
     latitude DOUBLE,
     speed DOUBLE,
@@ -57,8 +58,8 @@ CREATE TABLE IF NOT EXISTS TripVertices(
     rpm INT,
     error_msg VARCHAR(1000),
     registration_time DATETIME(3) NOT NULL,
-    FOREIGN KEY(trip_id) REFERENCES Trips(id),
-    PRIMARY KEY(trip_id, registration_time)
+    FOREIGN KEY(car_id, start_time) REFERENCES Trips(car_id, start_time) ON DELETE CASCADE,
+    PRIMARY KEY(car_id, registration_time)
 );
 
 INSERT INTO Users VALUES(true, "Admin", "1234");
@@ -67,3 +68,4 @@ INSERT INTO Organizations VALUES(null, "MinOrg");
 INSERT INTO Cars VALUES("EN12325", "Lada", "Shitwagon", 1839, 1);
 INSERT INTO Cars VALUES("EN53325", "Lada", "Snailmobile", 1019, 1);
 INSERT INTO OrgMembers VALUES("Gunnar", 1, "Member");
+INSERT INTO Trips VALUES("EN12325", "Gunnar","2016-2-02 12:52:21.504");
