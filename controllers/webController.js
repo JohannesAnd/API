@@ -158,9 +158,10 @@ exports.GetCarTrips = function getCarTrips(req, res, cb) {
 
 exports.GetCarTrip = function getCarTrip(req, res, cb) {
     var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ?";
-    connection.query(query, req.params.trip, function(err, rows){
+    connection.query(query, req.params.id, function(err, rows){
         if (err) { return cb(err); }
-        res.render("car/Trip", {tripID: req.params.trip, vertices: rows});
+
+        res.render("car/Trip", {vertices: rows});
     });
 };
 
@@ -191,3 +192,35 @@ exports.NewCar = function NewCar(req, res, cb) {
             res.redirect("/organizations/" + req.params.id + "/edit");
         });
 };
+
+exports.CarOverview = function co(req, res, next) {
+    var query = "SELECT * FROM Organizations WHERE id=?";
+    connection.query(query, req.params.orgid, function(err, rows) {
+        if(err) {
+            return next(err);
+        }
+        res.render("organization/CarOverview", {org: rows[0]});
+    });
+};
+
+exports.CarOverviewData = function cod(req, res, next) {
+    var query = "SELECT * FROM Cars AS C JOIN TripVertices AS TV ON TV.car_id = C.registration";
+    connection.query(query, function(err, rows) {
+        if(err) {
+            return next(err);
+        }
+        var result = [];
+        rows.forEach(function(row){
+            result.push({
+                registration: row.registration,
+                make: row.make,
+                model: row.model,
+                prodYear: row.prodYear,
+                latitude: row.latitude,
+                longitude: row.longitude,
+                last_active: row.registration_time
+            });
+        });
+        res.json({cars: result});
+    });
+}

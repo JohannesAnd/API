@@ -5,4 +5,4 @@ block content
     ul
         each trip in trips
             li
-                a(href="/car/"+registration+"/"+trip.id)= trip.id
+                a(href="/car/" + registration + "/" + trip.id + "/trip")= trip.start_time + trip.user_id
