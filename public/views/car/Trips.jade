@@ -1,8 +1,42 @@
 extends ./../MainMenu
 
 block content
-    h1= "Trips by " + registration
-    ul
-        each trip in trips
-            li
-                a(href="/car/" + registration + "/" + trip.id + "/trip")= trip.start_time + trip.user_id
+
+    .trip.heading Trips by #{registration}
+    .twoEvenColumns
+        //each trip in trips
+        .column1
+            each val in [1,2,3,4, 5, 6, 7, 8]
+                .trip
+                    //a(href="/car/" + registration + "/" + trip.id + "/trip")= trip.start_time + trip.user_id
+                    img(src="/images/WorkTrip.png" style=relative)
+                    img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?&zoom=12&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true&path=63.4181,10.4067|63.4138, 10.41169|63.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216&sensor=false")
+                    .tripDayText
+                        p Wednesday 24. March
+                    .tripSimpleLabel.fuelAverage
+                        p 0.08 L/km fuel
+                    .tripSimpleLabel.fuelUsed
+                        p 2.1 L fuel used
+                    .tripSimpleLabel.kmdriven
+                        p 26.3 km driven
+
+
+        .column2
+            each val in [1,2,3,4, 5, 6, 7, 8]
+                .trip
+
+                    //a(href="/car/" + registration + "/" + trip.id + "/trip")= trip.start_time + trip.user_id
+                    img(src="/images/WorkTrip.png")
+                    img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?center=Albany,+NY&zoom=13&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true" alt="Google Map of Albany, NY")
+                    .tripDayText
+                        p Wednesday 24. March
+                    .tripSimpleLabel.fuelAverage
+                        p 0.08 L/km fuel
+                    .tripSimpleLabel.fuelUsed
+                        p 2.1 L fuel used
+                    .tripSimpleLabel.kmdriven
+                        p 26.3 km driven
+
+
+
+
