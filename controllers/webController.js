@@ -51,7 +51,7 @@ exports.CheckUsername = function checkUsername(req, res, cb) {
 
 exports.NewUser = function newUser(req, res, cb) {
     var form = req.body;
-    var user = {name: form.name, password: form.password};
+    var user = {id: form.id, name: form.name, password: form.password};
     if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
         connection.query("INSERT INTO Users SET ?", user, function(err){
             if (err) { return cb(err);}
@@ -204,23 +204,17 @@ exports.CarOverview = function co(req, res, next) {
 };
 
 exports.CarOverviewData = function cod(req, res, next) {
-    var query = "SELECT * FROM Cars AS C JOIN TripVertices AS TV ON TV.car_id = C.registration";
+    var query = "SELECT * FROM Cars AS C " +
+                    "JOIN Trips AS T ON T.car_id = C.registration " +
+                    "JOIN TripVertices AS TV ON TV.trip_id = T.id " +
+                "WHERE registration_time IN (" +
+                    "SELECT MAX(registration_time) FROM TripVertices " +
+                        "JOIN Trips ON Trips.id = TripVertices.trip_id " +
+                    "WHERE C.registration = Trips.car_id)";
     connection.query(query, function(err, rows) {
         if(err) {
             return next(err);
         }
-        var result = [];
-        rows.forEach(function(row){
-            result.push({
-                registration: row.registration,
-                make: row.make,
-                model: row.model,
-                prodYear: row.prodYear,
-                latitude: row.latitude,
-                longitude: row.longitude,
-                last_active: row.registration_time
-            });
-        });
-        res.json({cars: result});
+        res.json({cars: rows});
     });
-}
+};

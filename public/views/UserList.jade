@@ -9,10 +9,11 @@ block content
     #userList
         ul
             each user in users
-                li= user.name
+                li= user.name + " " + user.id
     .form
         form(action="/newUser", method="post")
             fieldset
+                input(id="id", name="id" type="text", value="", placeholder="RFID")
 
                 input(id="name", name="name" type="text", value="", placeholder="Name")
 

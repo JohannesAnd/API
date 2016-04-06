@@ -39,7 +39,7 @@ module.exports = function(app, passport) {
     app.get("/organizations/:id/getUsers", ensureAuthenticated, webController.GetOrgUsers);
     app.post("/organizations/:id/newCar", ensureAuthenticated, webController.NewCar);
     app.get("/organizations/:orgid/carOverview", ensureAuthenticated, webController.CarOverview);
-    app.get("/organizations/:orgid/carOverview/getData", ensureAuthenticated, webController.CarOverviewData);
+    app.get("/organizations/:orgid/carOverview/getData", webController.CarOverviewData);
     /*app.post("/organizations/:id/edit/addUser", ensureAuthenticated, webController.PostOrganizationAddUser);
     app.post("/organizations/:id/edit/addAdmin", ensureAuthenticated, webController.PostOrganizationAddAdmin);
     app.post("/organizations/:id/edit/removeUser", ensureAuthenticated, webController.PostOrganizationRemoveUser);
