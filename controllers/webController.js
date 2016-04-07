@@ -1,10 +1,12 @@
 var mysql = require("mysql");
+var moment = require("moment");
 var connection = mysql.createConnection({
     host: "localhost",
     user: process.env.dbuser,
     password: process.env.dbpassword,
     database: "cars"
 });
+moment.locale("nb");
 
 connection.connect();
 
@@ -215,6 +217,12 @@ exports.CarOverviewData = function cod(req, res, next) {
         if(err) {
             return next(err);
         }
+        var result = rows;
+        result.forEach(function(row) {
+            var date = moment(row.registration_time);
+            row["registration_time"] = date.format('Do MMMM YYYY HH:mm:ss');
+            row["active"] = date.isAfter(moment().subtract(2, "minute"));
+        });
         res.json({cars: rows});
     });
 };

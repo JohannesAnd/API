@@ -1,5 +1,10 @@
 extends ./../MainMenu
 
+block header
+    script(src="/js/carOverview.js", type="text/javascript")
+    script(type="text/javascript").
+        var id = !{org.id};
+
 block content
     h1="Car Overview for "+org.name
     #active
