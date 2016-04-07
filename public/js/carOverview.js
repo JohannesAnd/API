@@ -5,13 +5,14 @@ $(document).ready(function() {
     var mapOptions = {
         center: mapCenter,
         zoom: 13,
+        maxZoom: 17,
         scrollwheel: true,
         draggable: true,
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(mapCanvas, mapOptions);
-    function updateCars(){
+    function updateCars(successFunc){
         $.ajax({
             url: "/organizations/" + id + "/carOverview/getData",
             type: "get",
@@ -38,9 +39,12 @@ $(document).ready(function() {
                         "</div>"
                     );
                 }));
+                if (successFunc)
+                    successFunc();
             }
         });
     }
+
     var bittersMap = (function () {
         return {
             init: function () {
@@ -56,7 +60,16 @@ $(document).ready(function() {
             }
         };
     }());
+
     bittersMap.init();
-    updateCars();
-    setInterval(updateCars, 1000);
+
+    updateCars(function (data){
+        var bounds = new google.maps.LatLngBounds();
+        for (var reg in markers)
+            bounds.extend(markers[reg].position)
+
+        map.fitBounds(bounds)
+    });
+
+    setInterval(updateCars(null), 1000);
 });
