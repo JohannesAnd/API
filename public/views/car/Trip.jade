@@ -1,30 +1,11 @@
 extends ./../MainMenu
 
+block header
+    script(src="/js/trip.js", type="text/javascript")
+
 block content
-    h1= "Trip " + start_time
-    table
-        tr
-            th Latitude
-            th Longitude
-            th Altitude
-            th Speed
-            th Coolant Temp
-            th Engine Load
-            th Fuel Pressure
-            th Intake Air Temp
-            th RPM
-            th Errors
-            th Time
-        each vertex in vertices
-            tr
-                td= vertex.latitude
-                td= vertex.longitude
-                td= vertex.altitude
-                td= vertex.speed
-                td= vertex.coolant_temp
-                td= vertex.engine_load
-                td= vertex.fuel_pressure
-                td= vertex.intake_air_temp
-                td= vertex.rpm
-                td= vertex.error_msg
-                td= vertex.registration_time
+    h1= trip_id
+    a(href="../trips") Back to trips
+    #map(style="width: 100%; height: 600px;")
+    script(type='text/javascript').
+        var points = !{JSON.stringify(vertices)}

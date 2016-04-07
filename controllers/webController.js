@@ -163,7 +163,7 @@ exports.GetCarTrip = function getCarTrip(req, res, cb) {
     connection.query(query, req.params.id, function(err, rows){
         if (err) { return cb(err); }
 
-        res.render("car/Trip", {vertices: rows});
+        res.render("car/Trip", {vertices: rows, trip_id: req.params.id});
     });
 };
 
