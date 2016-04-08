@@ -220,7 +220,7 @@ exports.CarOverviewData = function cod(req, res, next) {
         var result = rows;
         result.forEach(function(row) {
             var date = moment(row.registration_time);
-            row["registration_time"] = date.format('Do MMMM YYYY HH:mm:ss');
+            row["registration_time"] = date.format("Do MMMM YYYY HH:mm:ss");
             row["active"] = date.isAfter(moment().subtract(2, "minute"));
         });
         res.json({cars: rows});

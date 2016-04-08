@@ -63,12 +63,12 @@ $(document).ready(function() {
 
     bittersMap.init();
 
-    updateCars(function (data){
+    updateCars(function (){
         var bounds = new google.maps.LatLngBounds();
         for (var reg in markers)
-            bounds.extend(markers[reg].position)
+            bounds.extend(markers[reg].position);
 
-        map.fitBounds(bounds)
+        map.fitBounds(bounds);
     });
 
     setInterval(updateCars(null), 1000);
