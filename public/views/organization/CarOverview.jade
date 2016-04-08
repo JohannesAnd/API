@@ -1,9 +1,10 @@
 extends ./../MainMenu
 
 block header
-    script(src="/js/carOverview.js", type="text/javascript")
     script(type="text/javascript").
         var id = !{org.id};
+    script(src = "/js/carOverview.js", type = "text/javascript")
+
 
 block content
     #map_canvas

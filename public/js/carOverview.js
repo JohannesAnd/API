@@ -39,8 +39,9 @@ $(document).ready(function() {
                         "</div>"
                     );
                 }));
-                if (successFunc)
+                if (successFunc) {
                     successFunc();
+                }
             }
         });
     }
@@ -71,5 +72,5 @@ $(document).ready(function() {
         map.fitBounds(bounds);
     });
 
-    setInterval(updateCars(null), 1000);
+    setInterval(updateCars, 1000);
 });
