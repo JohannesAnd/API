@@ -151,11 +151,17 @@ exports.EditOrganization = function editOrg(req, res, cb) {
 };
 
 exports.GetCarTrips = function getCarTrips(req, res, cb) {
-    var query = "SELECT * FROM Trips WHERE car_id LIKE ?";
-    connection.query(query, req.params.registration, function(err, rows){
-        if (err) { return cb(err); }
-        res.render("car/Trips", {trips: rows, registration: req.params.registration});
-    });
+
+
+    var rows = [
+        {date:"Friday 24. March", fuelAverage:"0.08", fuelUsed:"1.2", kmDriven:"3.1", vertices:"63.4181,10.4067|63.4138, 10.41169|63.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216"},
+        {date:"Wednesday 22. March", fuelAverage:"0.12", fuelUsed:"43.2", kmDriven:"204.1", vertices:"62.4181,10.4067|62.4138, 90.41169|62.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216"},
+        {date:"Tuesday 21. March", fuelAverage:"0.21", fuelUsed:"8.1", kmDriven:"12.0", vertices:"53.4181,10.4067|53.4138, 11.41169|53.416093, 10.43160|53.42370, 10.411906|53.43027, 9.39216"}
+
+    ]
+    res.render("car/Trips", {trips: rows, registration: req.params.registration});
+
+
 };
 
 exports.GetCarTrip = function getCarTrip(req, res, cb) {
