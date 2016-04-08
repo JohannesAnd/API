@@ -1,18 +1,20 @@
 var mysql = require("mysql");
+var moment = require("moment");
 var connection = mysql.createConnection({
     host: "localhost",
     user: process.env.dbuser,
     password: process.env.dbpassword,
     database: "cars"
 });
+moment.locale("nb");
 
 connection.connect();
 
 var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
 
-exports.Index = function index(req, res) {
-    res.render("Index");
+exports.Landing = function Landing(req, res) {
+    res.render("Landing");
 };
 
 exports.SignIn = function signIn(req, res) {
@@ -51,7 +53,7 @@ exports.CheckUsername = function checkUsername(req, res, cb) {
 
 exports.NewUser = function newUser(req, res, cb) {
     var form = req.body;
-    var user = {name: form.name, password: form.password};
+    var user = {id: form.id, name: form.name, password: form.password};
     if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
         connection.query("INSERT INTO Users SET ?", user, function(err){
             if (err) { return cb(err);}
@@ -148,19 +150,25 @@ exports.EditOrganization = function editOrg(req, res, cb) {
     });
 };
 
-exports.GetCarTrips = function getCarTrips(req, res, cb) {
-    var query = "SELECT * FROM Trips WHERE car_id LIKE ?";
-    connection.query(query, req.params.registration, function(err, rows){
-        if (err) { return cb(err); }
-        res.render("car/Trips", {trips: rows, registration: req.params.registration});
-    });
+exports.GetCarTrips = function getCarTrips(req, res) {
+
+
+    var rows = [
+        {date:"Friday 24. March", fuelAverage:"0.08", fuelUsed:"1.2", kmDriven:"3.1", vertices:"63.4181,10.4067|63.4138, 10.41169|63.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216"},
+        {date:"Wednesday 22. March", fuelAverage:"0.12", fuelUsed:"43.2", kmDriven:"204.1", vertices:"62.4181,10.4067|62.4138, 90.41169|62.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216"},
+        {date:"Tuesday 21. March", fuelAverage:"0.21", fuelUsed:"8.1", kmDriven:"12.0", vertices:"53.4181,10.4067|53.4138, 11.41169|53.416093, 10.43160|53.42370, 10.411906|53.43027, 9.39216"}
+    ];
+    res.render("car/Trips", {trips: rows, registration: req.params.registration});
+
+
 };
 
 exports.GetCarTrip = function getCarTrip(req, res, cb) {
     var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ?";
-    connection.query(query, req.params.trip, function(err, rows){
+    connection.query(query, req.params.id, function(err, rows){
         if (err) { return cb(err); }
-        res.render("car/Trip", {tripID: req.params.trip, vertices: rows});
+
+        res.render("car/Trip", {vertices: rows, trip_id: req.params.id});
     });
 };
 
@@ -190,4 +198,36 @@ exports.NewCar = function NewCar(req, res, cb) {
             if (err) { return cb(err); }
             res.redirect("/organizations/" + req.params.id + "/edit");
         });
+};
+
+exports.CarOverview = function co(req, res, next) {
+    var query = "SELECT * FROM Organizations WHERE id=?";
+    connection.query(query, req.params.orgid, function(err, rows) {
+        if(err) {
+            return next(err);
+        }
+        res.render("organization/CarOverview", {org: rows[0]});
+    });
+};
+
+exports.CarOverviewData = function cod(req, res, next) {
+    var query = "SELECT * FROM Cars AS C " +
+                    "JOIN Trips AS T ON T.car_id = C.registration " +
+                    "JOIN TripVertices AS TV ON TV.trip_id = T.id " +
+                "WHERE registration_time IN (" +
+                    "SELECT MAX(registration_time) FROM TripVertices " +
+                        "JOIN Trips ON Trips.id = TripVertices.trip_id " +
+                    "WHERE C.registration = Trips.car_id)";
+    connection.query(query, function(err, rows) {
+        if(err) {
+            return next(err);
+        }
+        var result = rows;
+        result.forEach(function(row) {
+            var date = moment(row.registration_time);
+            row["registration_time"] = date.format("Do MMMM YYYY HH:mm:ss");
+            row["active"] = date.isAfter(moment().subtract(2, "minute"));
+        });
+        res.json({cars: rows});
+    });
 };

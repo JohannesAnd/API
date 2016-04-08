@@ -1,0 +1,13 @@
+extends ./../MainMenu
+
+block header
+    script(type="text/javascript").
+        var id = !{org.id};
+    script(src = "/js/carOverview.js", type = "text/javascript")
+
+
+block content
+    #map_canvas
+    h1="Car Overview for "+org.name
+    #active
+    #inactive

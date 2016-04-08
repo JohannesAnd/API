@@ -24,9 +24,10 @@ exports.PostTripVertex = function(req, res, cb) {
     var data = {};
     if (req.body.type === "trip") {
         data = {
-            "id": req.body.trip_id,
-            "user_id": req.body.user_id,
-            "car_id": req.body.car_id
+            "id": req.body.id,
+            "car_id": req.body.car_id,
+            "user_id": null,
+            "start_time": req.body.start_time
         };
         connection.query("INSERT INTO Trips SET ?", data, function(err){
             if (err) { return cb(err);}
@@ -43,12 +44,21 @@ exports.PostTripVertex = function(req, res, cb) {
             engine_load: req.body.engine_load,
             fuel_pressure: req.body.fuel_pressure,
             intake_air_temp: req.body.intake_air_temp,
-            rpm:req.body.rpm,
+            rpm: req.body.rpm,
             error_msg: String(req.body.errors),
             registration_time: req.body.registration_time
         };
-        connection.query("INSERT INTO TripVertices SET ?", data, function(err){
-            if (err) { return cb(err);}
+        connection.query("INSERT INTO TripVertices SET ?", data, function (err) {
+            if (err) {
+                return cb(err);
+            }
+            res.status(200).send();
+        });
+    } else if (req.body.type == "user") {
+        connection.query("UPDATE Trips SET user_id=? WHERE Trips.id=?", [req.body.user_id, req.body.trip_id], function(err) {
+            if (err) {
+                return cb(err);
+            }
             res.status(200).send();
         });
     } else {
