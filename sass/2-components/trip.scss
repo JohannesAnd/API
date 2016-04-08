@@ -1,0 +1,59 @@
+.trip {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.trip.heading {
+  width: 100%;
+  font-size: 14pt;
+  font-weight: lighter;
+  text-align: center;
+  padding-top: 6pt;
+  padding-bottom: 16pt;
+}
+
+.tripDayText {
+  position: absolute;
+  top: 15%;
+  left: 13%;
+  background-size: 100%;
+  text-align: center;
+  font-size: 12pt;
+  color: rgb(73, 73, 73);
+
+}
+
+.tripSimpleLabel {
+  position: absolute;
+  color: white;
+  font-size: 11pt;
+  text-align: left;
+  left: 23%;
+  font-weight: lighter;
+
+}
+
+
+.tripSimpleLabel.fuelAverage {
+  top: 33.5%;
+}
+
+.tripSimpleLabel.fuelUsed {
+  top: 50%;
+}
+
+.tripSimpleLabel.kmDriven {
+  top: 65%;
+}
+
+.tripMap {
+  position: absolute;
+  z-index: 1;
+
+  top: 7%;
+  left: 48.1%;
+  width: 48%;
+  height: 84.8%;
+  border-radius: 11px;
+}

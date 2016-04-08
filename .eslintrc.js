@@ -8,7 +8,8 @@ module.exports = {
         "jQuery": false,
         "google": false,
         "Chart": false,
-        "id": false
+        "id": false,
+        "points": false
     },
     "extends": "eslint:recommended",
     "rules": {

@@ -1,0 +1,22 @@
+html
+    head
+        link(href='/styles.css', rel='stylesheet')
+        link(href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css')
+
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js' type="text/javascript")
+        title TripTrackr
+    body
+div#landing
+    #landingForm
+        img(src="/images/Logo.png")
+        .form
+            form(action="/signIn", method="post")
+                fieldset
+
+                    input(id="name", name="username" type="text", value="", placeholder="Username")
+
+                    input(id="password", name="password" type="password", placeholder="Password")
+
+                    input(type="submit", value="Sign in")
