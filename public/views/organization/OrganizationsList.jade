@@ -4,11 +4,16 @@ block content
     if user.is_admin
         a(href="/organizations/new")
             button Make new org
-    for organization in organizations
-        .organization
-            h1
-                a(href="organizations/"+organization.id)= organization.name
-            ul
-            for car in organization.cars
-                if car
-                    li= car
+        .organization-container
+            for organization in organizations
+                .organization
+                    .organization-title
+                        h1
+                            a(href="organizations/"+organization.id)= organization.name
+                    .organization-main
+                        img(src="http://dummyimage.com/160x80/ffffff/000000.png&text=Company+Logo")
+                        ul
+                            li= "Number of cars: " + organization.cars.length
+                            for car in organization.cars
+                                if car
+                                    li= car
