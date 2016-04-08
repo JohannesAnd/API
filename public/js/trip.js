@@ -56,7 +56,7 @@ $(document).ready(function(){
     new google.maps.Polyline({
         path: flightPlanCoordinates,
         geodesic: true,
-        strokeColor: '#0094ff',
+        strokeColor: "#0094ff",
         strokeOpacity: 1.0,
         strokeWeight: 2,
         map: map
