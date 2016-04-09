@@ -14,11 +14,15 @@ var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
 
 exports.Landing = function Landing(req, res) {
-    res.render("Landing");
+    if(!req.user){
+        res.render("SigninLanding");
+        return
+    }
+    res.render("LoggedInLanding");
 };
 
 exports.SignIn = function signIn(req, res) {
-    res.render("SignIn");
+    res.redirect("/");
 };
 
 exports.SignOut = function signOut(req, res) {
@@ -60,6 +64,8 @@ exports.NewUser = function newUser(req, res, cb) {
             res.redirect("/users");
         });
     }
+    else
+        res.redirect("/users"); // TODO! SHOULD GIVE ERROR!
 };
 
 exports.OrganizationList = function orgList(req, res, cb) {

@@ -1,10 +1,11 @@
 var webController = require("./../controllers/webController");
+var organizationService = require("./../services/organizationService");
 
 function ensureAuthenticated(req, res, next) {
     if (req.user) {
         return next();
     }else {
-        res.redirect("/signIn");
+        res.redirect("/");
     }
 }
 
@@ -18,18 +19,18 @@ function ensureAdmin(req, res, next) {
 
 module.exports = function(app, passport) {
     app.get("/", webController.Landing);
-    app.post("/signIn", passport.authenticate("local", {successRedirect: "/users", failureRedirect: "/"}));
     app.get("/signOut", webController.SignOut);
-    app.get("/users", webController.Users);
     app.get("/signIn", webController.SignIn);
+    app.post("/signIn", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/"}));
     app.post("/newUser", webController.NewUser);
     app.post("/checkUsername", webController.CheckUsername);
 
-    app.get("/car/:registration", webController.CarDetails);
-    app.get("/car/:registration/trip", webController.GetCarDetails);
+    app.get("/users", ensureAuthenticated, webController.Users);
+    app.get("/car/:registration", ensureAuthenticated, webController.CarDetails);
+    app.get("/car/:registration/trip", ensureAuthenticated, webController.GetCarDetails);
 
-    app.get("/car/:registration/trips", webController.GetCarTrips);
-    app.get("/car/:registration/:id/trip", webController.GetCarTrip);
+    app.get("/car/:registration/trips", ensureAuthenticated, webController.GetCarTrips);
+    app.get("/car/:registration/:id/trip", ensureAuthenticated, webController.GetCarTrip);
 
     app.get("/organizations", ensureAuthenticated, webController.OrganizationList);
     app.get("/organizations/new", ensureAdmin, webController.NewOrganization);
