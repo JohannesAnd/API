@@ -2,10 +2,8 @@ extends ./../MainMenu
 
 block content
 
-    .trip.heading Trips by #{registration}
-    .twoEvenColumns
-        //each trip in trips
-        .column1
+    .trip-heading Trips by #{registration}
+        .trips
             each trip in trips
                 .trip
                     a(href="/car/" + registration + "/" + trip.id + "/trip")
@@ -19,24 +17,3 @@ block content
                             p #{trip.fuelUsed} L fuel used
                         .tripSimpleLabel.kmdriven
                             p #{trip.kmDriven} km driven
-
-
-        .column2
-            each val in [1,2,3,4, 5, 6, 7, 8]
-                .trip
-
-                    //a(href="/car/" + registration + "/" + trip.id + "/trip")= trip.start_time + trip.user_id
-                    img(src="/images/WorkTrip.png")
-                    img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?&zoom=12&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true&path=63.4181,10.4067|63.4138, 10.41169|63.416093, 10.43160|63.42370, 10.411906|63.43027, 10.39216&sensor=false")
-                    .tripDayText
-                        p Wednesday 24. March
-                    .tripSimpleLabel.fuelAverage
-                        p 0.08 L/km fuel
-                    .tripSimpleLabel.fuelUsed
-                        p 2.1 L fuel used
-                    .tripSimpleLabel.kmdriven
-                        p 26.3 km driven
-
-
-
-
