@@ -26,7 +26,7 @@ exports.getCarTripOverview = function(car_id, cb) {
         rows.forEach(function(row) {
             if (row.id in coords) {
                 coords[row.id]["vertices"] = coords[row.id]["vertices"] + "|" + row.latitude + "," + row.longitude;
-            } else  {
+            } else {
                 coords[row.id] = {
                     id: row.id,
                     date: moment(row.start_time).format("Do MMMM YYYY HH:mm:ss"),
@@ -40,7 +40,7 @@ exports.getCarTripOverview = function(car_id, cb) {
         var result = [];
         for (var o in coords) {
             result.push(coords[o]);
-        };
+        }
         var ordered = result.sort(function(a, b) {
             return b.start_time - a.start_time;
         });
