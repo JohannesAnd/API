@@ -84,7 +84,7 @@ exports.PostNewOrganization = function postNewOrg(req, res, cb) {
 };
 
 exports.PostOrganizationAddUser = function postOrganizationAddUser(req, res, cb) {
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     var user = req.body.user_id;
     organizationService.setOrgMember(user, orgId, "Member", function(err){
         if (err) { return cb(err); }
@@ -93,7 +93,7 @@ exports.PostOrganizationAddUser = function postOrganizationAddUser(req, res, cb)
 }
 
 exports.PostOrganizationAddAdmin = function postOrganizationAddAdmin(req, res, cb) {
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     var user = req.body.user_id;
     organizationService.setOrgMember(user, orgId, "Admin", function(err){
         if (err) { return cb(err); }
@@ -102,7 +102,7 @@ exports.PostOrganizationAddAdmin = function postOrganizationAddAdmin(req, res, c
 }
 
 exports.PostOrganizationRemoveUser = function postOrganizationRemoveUser(req, res, cb) {
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     var user = req.body.user_id;
     organizationService.removeFromOrg(user, orgId, function(err){
         if (err) { return cb(err); }
@@ -111,7 +111,7 @@ exports.PostOrganizationRemoveUser = function postOrganizationRemoveUser(req, re
 }
 
 exports.PostOrganizationRemoveAdmin = function postOrganizationRemoveAdmin(req, res, cb) {
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     var user = req.body.user_id;
     organizationService.setOrgMember(user, orgId, "Member", function(err){
         if (err) { return cb(err); }
@@ -146,7 +146,7 @@ exports.OrganizationList = function orgList(req, res, cb) {
 exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var org = {};
     var isAdmin;
-    var id = req.params.id;
+    var id = req.params.orgid;
     var orgQuery = "SELECT * FROM Organizations AS O WHERE O.id = ?";
     var carQuery = "SELECT * FROM Cars AS C WHERE C.organization_id = ?";
     var userQuery = "SELECT * FROM OrgMembers as O JOIN Users AS U ON U.name=O.user_id WHERE O.org_id = ?";
@@ -184,7 +184,7 @@ exports.GetCarDetails = function getCarDetails(req, res) {
 };
 
 exports.EditOrganization = function editOrg(req, res, cb) {
-    var id = req.params.id;
+    var id = req.params.orgid;
     organizationService.getUserOrgRole(req.user, id, function(err, role) {
         if (err) { return cb(err); }
         if (role == "Admin") {
@@ -208,22 +208,22 @@ exports.GetCarTrips = function getCarTrips(req, res, cb) {
 };
 
 exports.GetCarTrip = function getCarTrip(req, res, cb) {
-    carService.getTripVerticiesFromTrip(req.params.id, function(err, rows){
+    carService.getTripVerticiesFromTrip(req.params.tripid, function(err, rows){
         if (err) { return cb(err); }
 
-        res.render("car/Trip", {vertices: rows, trip_id: req.params.id});
+        res.render("car/Trip", {vertices: rows, trip_id: req.params.orgid});
     });
 };
 
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
     var query = "SELECT DISTINCT U.id, U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
-    connection.query(query, req.params.id, function(err, rows) {
+    connection.query(query, req.params.orgid, function(err, rows) {
         if (err) { return cb(err); }
         var results = {members: [], admins: [], users: []};
         rows.forEach(function(row){
-            if (row.role === "Admin" && row.org_id === parseInt(req.params.id)) {
+            if (row.role === "Admin" && row.org_id === parseInt(req.params.orgid)) {
                 results.admins.push(row);
-            }else if (row.role === "Member" && row.org_id === parseInt(req.params.id)){
+            }else if (row.role === "Member" && row.org_id === parseInt(req.params.orgid)){
                 results.members.push(row);
             }else { //Shows some users twice.. Must fix
                 results.users.push(row);
@@ -236,10 +236,10 @@ exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
 exports.NewCar = function NewCar(req, res, cb) {
     var query = "INSERT INTO Cars VALUES(?, ?, ?, ?, ?)";
     connection.query(query,
-        [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.id],
+        [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.orgid],
         function(err){
             if (err) { return cb(err); }
-            res.redirect("/organizations/" + req.params.id + "/edit");
+            res.redirect("/organizations/" + req.params.orgid + "/edit");
         });
 };
 

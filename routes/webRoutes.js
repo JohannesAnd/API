@@ -18,10 +18,7 @@ function ensureAdmin(req, res, next) {
 }
 
 function ensureOrgAdmin(req, res, next) {
-    if (!req.user)
-        forbidden(res);
-
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     organizationService.getUserOrgRole(req.user, orgId, function(err, role){
         if (err) { return next(err); }
         else if (role == "Admin") { return next(); }
@@ -31,10 +28,7 @@ function ensureOrgAdmin(req, res, next) {
 }
 
 function ensureOrgMember(req, res, next){
-    if (!req.user)
-        forbidden(res);
-
-    var orgId = req.params.id;
+    var orgId = req.params.orgid;
     organizationService.getUserOrgRole(req.user, orgId, function(err, role){
         if (err) { return next(err); }
         else if (role) { return next(); }
@@ -48,34 +42,34 @@ function forbidden(res){
 }
 
 module.exports = function(app, passport) {
-    app.get("/", webController.Landing);
-    app.get("/signOut", webController.SignOut);
-    app.get("/signIn", webController.SignIn);
-    app.post("/signIn", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/"}));
-    app.post("/newUser", webController.NewUser);
-    app.post("/checkUsername", webController.CheckUsername);
+    app.get("/",                webController.Landing);
+    app.get("/signOut",         webController.SignOut);
+    app.get("/signIn",          webController.SignIn);
+    app.post("/signIn",         passport.authenticate("local", {successRedirect: "/", failureRedirect: "/"}));
+    app.post("/newUser",        webController.NewUser);
+    app.post("/checkUsername",  webController.CheckUsername);
 
-    app.get("/users", ensureAuthenticated, webController.Users);
-    app.get("/car/:registration", ensureAuthenticated, webController.CarDetails);
-    app.get("/car/:registration/trip", ensureAuthenticated, webController.GetCarDetails);
+    app.get("/users",                   ensureAuthenticated, webController.Users);
+    app.get("/car/:registration",       ensureAuthenticated, webController.CarDetails);
+    app.get("/car/:registration/trip",  ensureAuthenticated, webController.GetCarDetails);
 
-    app.get("/car/:registration/trips", ensureAuthenticated, webController.GetCarTrips);
-    app.get("/car/:registration/:id/trip", ensureAuthenticated, webController.GetCarTrip);
+    app.get("/car/:registration/trips",    ensureAuthenticated, webController.GetCarTrips);
+    app.get("/car/:registration/:tripid/trip", ensureAuthenticated, webController.GetCarTrip);
 
-    app.get("/organizations", ensureAuthenticated, webController.OrganizationList);
-    app.get("/organizations/new", ensureAdmin, webController.NewOrganization);
-    app.get("/organizations/:id", ensureAuthenticated, webController.OrganizationDetails);
-    app.get("/organizations/:id/edit", ensureOrgAdmin, webController.EditOrganization);
-    app.get("/organizations/:id/getUsers", ensureAuthenticated, webController.GetOrgUsers);
-    app.get("/organizations/:orgid/carOverview", ensureAuthenticated, webController.CarOverview);
-    app.get("/organizations/:orgid/carOverview/getData", webController.CarOverviewData);
+    app.get("/organizations",                               ensureAuthenticated, webController.OrganizationList);
+    app.get("/organizations/new",                           ensureAuthenticated, ensureAdmin, webController.NewOrganization);
+    app.get("/organizations/:orgid",                        ensureAuthenticated, ensureOrgMember, webController.OrganizationDetails);
+    app.get("/organizations/:orgid/edit",                   ensureAuthenticated, ensureOrgAdmin, webController.EditOrganization);
+    app.get("/organizations/:orgid/getUsers",               ensureAuthenticated, ensureOrgMember, webController.GetOrgUsers);
+    app.get("/organizations/:orgid/carOverview",            ensureAuthenticated, ensureOrgMember, webController.CarOverview);
+    app.get("/organizations/:orgid/carOverview/getData",    ensureAuthenticated, ensureOrgMember, webController.CarOverviewData);
 
-    app.post("/organizations/new", ensureAdmin, webController.PostNewOrganization);
-    app.post("/organizations/:id/newCar", ensureOrgAdmin, webController.NewCar);
-    app.post("/organizations/:id/edit/addUser", ensureOrgAdmin, webController.PostOrganizationAddUser);
-    app.post("/organizations/:id/edit/addAdmin", ensureOrgAdmin, webController.PostOrganizationAddAdmin);
-    app.post("/organizations/:id/edit/removeUser", ensureOrgAdmin, webController.PostOrganizationRemoveUser);
-    app.post("/organizations/:id/edit/removeAdmin", ensureOrgAdmin, webController.PostOrganizationRemoveAdmin);
+    app.post("/organizations/new",                          ensureAuthenticated, ensureAdmin, webController.PostNewOrganization);
+    app.post("/organizations/:orgid/newCar",                ensureAuthenticated, ensureOrgAdmin, webController.NewCar);
+    app.post("/organizations/:orgid/edit/addUser",          ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationAddUser);
+    app.post("/organizations/:orgid/edit/addAdmin",         ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationAddAdmin);
+    app.post("/organizations/:orgid/edit/removeUser",       ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationRemoveUser);
+    app.post("/organizations/:orgid/edit/removeAdmin",      ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationRemoveAdmin);
     /*app.post("/organizations/:id/edit/removeCar", ensureOrgAdmin, webController.PostOrganizationRemoveUser);
 
     NB! Må kanskje bruke ajax på noen av disse i bakgrunnen.... Idk.. Må iallefall løses på en elegant måte

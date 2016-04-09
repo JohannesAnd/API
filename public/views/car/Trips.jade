@@ -9,6 +9,7 @@ block content
                 for point in trip.route
                     - route += point.lat + "," + point.lon + "|";
                 - route = route.substring(0, route.length - 2);
+
                 a(href="/car/" + registration + "/" + trip.id + "/trip")
                     img(src="/images/WorkTrip.png" style=relative)
                     img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?&zoom=auto&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true&path=#{route}&sensor=false")
