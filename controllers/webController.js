@@ -68,25 +68,7 @@ exports.NewUser = function newUser(req, res, cb) {
         res.redirect("/users"); // TODO! SHOULD GIVE ERROR!
 };
 
-exports.OrganizationList = function orgList(req, res, cb) {
-    var query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
 
-    connection.query(query, function(err, rows) {
-        if (err) {
-            return cb(err);
-        }
-        var resDict = {};
-        rows.forEach(function(row) {
-            if (row.id in resDict) {
-                resDict[row.id]["cars"].push(row.registration);
-            } else {
-                resDict[row.id] = row;
-                resDict[row.id]["cars"] = [row.registration];
-            }
-        });
-        res.render("organization/OrganizationsList", {organizations: resDict});
-    });
-};
 
 exports.NewOrganization = function newOrg(req, res) {
     res.render("organization/NewOrganization");
@@ -137,7 +119,29 @@ exports.PostOrganizationRemoveAdmin = function postOrganizationRemoveAdmin(req, 
     });
 }
 
+exports.OrganizationList = function orgList(req, res, cb) {
+    organizationService.getUserRelatedOrgs(req.user, function(err, rows){
+        if (err) {
+            return cb(err);
+        }
+        var resDict = {};
 
+        var endFunc = function(){
+            res.render("organization/OrganizationsList", {organizations: resDict});
+        }
+        var status = 0;
+        rows.forEach(function(row) {
+            resDict[row.id] = row;
+            carService.getCarsFromOrg(row.id, function (err, cars) {
+                if (err) { return cb(err); }
+                resDict[row.id]["cars"] = cars;
+                status++;
+                if(status == rows.length)
+                    endFunc();
+            });
+        });
+    })
+};
 
 exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var org = {};

@@ -14,3 +14,8 @@ exports.getCarDetails = function(registration, cb) {
         cb(null, rows);
     });
 };
+
+exports.getCarsFromOrg = function(orgID, cb) {
+    var query = "SELECT * FROM Cars WHERE organization_id=?"
+    connection.query(query, orgID, function(err, rows){ cb(err, rows)} );
+}
