@@ -40,7 +40,7 @@ exports.getUserRelatedOrgs = function(user, cb) {
     }
     else{
         var query = "SELECT * FROM Organizations AS O " +
-                        "JOIN OrgMembers as M ON C.organization_id=M.org_id " +
+                        "JOIN OrgMembers as M ON O.id=M.org_id " +
                     "WHERE M.user_id = ?";
         connection.query(query, user.id, function(err, rows){ cb(err, rows); });
     }

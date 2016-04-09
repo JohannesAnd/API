@@ -199,19 +199,16 @@ exports.EditOrganization = function editOrg(req, res, cb) {
 };
 
 exports.GetCarTrips = function getCarTrips(req, res, cb) {
-    carService.getCarTripOverview(req.params.registration, function(err, rows){
+    carService.getCarTripsWithRoute(req.params.registration, function(err, trips){
         if (err) {
             return cb(err);
         }
-        res.render("car/Trips", {trips: rows, registration: req.params.registration});
+        res.render("car/Trips", {trips: trips, registration: req.params.registration});
     });
-
-
 };
 
 exports.GetCarTrip = function getCarTrip(req, res, cb) {
-    var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ?";
-    connection.query(query, req.params.id, function(err, rows){
+    carService.getTripVerticiesFromTrip(req.params.id, function(err, rows){
         if (err) { return cb(err); }
 
         res.render("car/Trip", {vertices: rows, trip_id: req.params.id});

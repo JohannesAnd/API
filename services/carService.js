@@ -17,39 +17,36 @@ exports.getCarDetails = function(registration, cb) {
 };
 
 exports.getCarsFromOrg = function(orgID, cb) {
-    var query = "SELECT * FROM Cars WHERE organization_id=?"
+    var query = "SELECT * FROM Cars WHERE organization_id=?";
     connection.query(query, orgID, function(err, rows){ cb(err, rows)} );
 }
 
-exports.getCarTripOverview = function(car_id, cb) {
-    var query = "SELECT * FROM Trips AS T JOIN TripVertices AS TV ON TV.trip_id = T.id WHERE T.car_id=?";
-    connection.query(query, car_id, function(err, rows){
+exports.getCarTripsWithRoute = function(car_id, cb){
+    var query = "SELECT T.id, T.user_id, T.car_id, T.start_time, U.Name AS user, TV.latitude, TV.longitude FROM Trips AS T " +
+                    "JOIN TripVertices AS TV ON TV.trip_id = T.id " +
+                    "JOIN Users AS U ON T.user_id = U.id " +
+                "WHERE T.car_id=? ORDER BY T.start_time DESC ,TV.registration_time ASC";
+    connection.query(query, car_id, function (err, rows) {
         if (err) {
             cb(err);
         }
-        var coords = {};
-        rows.forEach(function(row) {
-            if (row.id in coords) {
-                coords[row.id]["vertices"] = coords[row.id]["vertices"] + "|" + row.latitude + "," + row.longitude;
-            } else {
-                coords[row.id] = {
-                    id: row.id,
-                    date: moment(row.start_time).format("Do MMMM YYYY HH:mm:ss"),
-                    fuelAverage: "N/A",
-                    fuelUsed: "N/A",
-                    kmDriven: "N/A"
-                };
-                coords[row.id]["vertices"] = row.latitude + "," + row.longitude;
+        var trips = {};
+        rows.forEach(function (row) {
+            if (!(row.id in trips)){
+                trips[row.id] = row;
+                trips[row.id].start_time = moment(trips[row.id].start_time)
+                trips[row.id].route = [{lat: row.latitude, lon: row.longitude}]
+                delete trips[row.id].latitude;
+                delete trips[row.id].longitude;
             }
-        });
-        var result = [];
-        for (var o in coords) {
-            result.push(coords[o]);
-        }
-        var ordered = result.sort(function(a, b) {
-            return b.start_time - a.start_time;
-        });
-        return cb(null, ordered);
-    });
-};
+            else
+                trips[row.id].route.push({lat: row.latitude, lon: row.longitude});
+        })
+        return cb(null, trips);
+    })
+}
 
+exports.getTripVerticiesFromTrip = function(tripID, cb) {
+    var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ? ORDER BY registration_time ASC";
+    connection.query(query, tripID, cb);
+}
