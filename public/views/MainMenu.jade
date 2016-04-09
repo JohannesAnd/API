@@ -24,10 +24,12 @@ html
                                     a(href="/signOut") Sign out
                                 else
                                     a(href="/signIn") Sign in
-                            li
-                                a(href="/users") Users
-                            li
-                                a(href="/organizations") Organizations
+
+                            if user
+                                li
+                                    a(href="/users") Users
+                                li
+                                    a(href="/organizations") Organizations
             .content
                 block content
             .footer

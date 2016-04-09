@@ -5,7 +5,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.user) {
         return next();
     }else {
-        res.redirect("/");
+        forbidden(res);
     }
 }
 
@@ -13,8 +13,38 @@ function ensureAdmin(req, res, next) {
     if (req.user && req.user.is_admin){
         return next();
     }else{
-        res.redirect("/");
+        forbidden(res);
     }
+}
+
+function ensureOrgAdmin(req, res, next) {
+    if (!req.user)
+        forbidden(res);
+
+    var orgId = req.params.id;
+    organizationService.getUserOrgRole(req.user, orgId, function(err, role){
+        if (err) { return next(err); }
+        else if (role == "Admin") { return next(); }
+        return forbidden(res);
+    });
+
+}
+
+function ensureOrgMember(req, res, next){
+    if (!req.user)
+        forbidden(res);
+
+    var orgId = req.params.id;
+    organizationService.getUserOrgRole(req.user, orgId, function(err, role){
+        if (err) { return next(err); }
+        else if (role) { return next(); }
+        return forbidden(res);
+    });
+
+}
+
+function forbidden(res){
+    res.status(403).render("forbidden");
 }
 
 module.exports = function(app, passport) {
@@ -34,19 +64,19 @@ module.exports = function(app, passport) {
 
     app.get("/organizations", ensureAuthenticated, webController.OrganizationList);
     app.get("/organizations/new", ensureAdmin, webController.NewOrganization);
-    app.post("/organizations/new", ensureAdmin, webController.PostNewOrganization);
     app.get("/organizations/:id", ensureAuthenticated, webController.OrganizationDetails);
-    app.get("/organizations/:id/edit", ensureAuthenticated, webController.EditOrganization);
+    app.get("/organizations/:id/edit", ensureOrgAdmin, webController.EditOrganization);
     app.get("/organizations/:id/getUsers", ensureAuthenticated, webController.GetOrgUsers);
-    app.post("/organizations/:id/newCar", ensureAuthenticated, webController.NewCar);
     app.get("/organizations/:orgid/carOverview", ensureAuthenticated, webController.CarOverview);
     app.get("/organizations/:orgid/carOverview/getData", webController.CarOverviewData);
-    /*app.post("/organizations/:id/edit/addUser", ensureAuthenticated, webController.PostOrganizationAddUser);
-    app.post("/organizations/:id/edit/addAdmin", ensureAuthenticated, webController.PostOrganizationAddAdmin);
-    app.post("/organizations/:id/edit/removeUser", ensureAuthenticated, webController.PostOrganizationRemoveUser);
-    app.post("/organizations/:id/edit/removeAdmin", ensureAuthenticated, webController.PostOrganizationRemoveAdmin);
-    app.post("/organizations/:id/edit/addCar", ensureAuthenticated, webController.PostOrganizationAddAdmin);
-    app.post("/organizations/:id/edit/removeCar", ensureAuthenticated, webController.PostOrganizationRemoveUser);
+
+    app.post("/organizations/new", ensureAdmin, webController.PostNewOrganization);
+    app.post("/organizations/:id/newCar", ensureOrgAdmin, webController.NewCar);
+    app.post("/organizations/:id/edit/addUser", ensureOrgAdmin, webController.PostOrganizationAddUser);
+    app.post("/organizations/:id/edit/addAdmin", ensureOrgAdmin, webController.PostOrganizationAddAdmin);
+    app.post("/organizations/:id/edit/removeUser", ensureOrgAdmin, webController.PostOrganizationRemoveUser);
+    app.post("/organizations/:id/edit/removeAdmin", ensureOrgAdmin, webController.PostOrganizationRemoveAdmin);
+    /*app.post("/organizations/:id/edit/removeCar", ensureOrgAdmin, webController.PostOrganizationRemoveUser);
 
     NB! Må kanskje bruke ajax på noen av disse i bakgrunnen.... Idk.. Må iallefall løses på en elegant måte
     slik at man kan legge til og promotere brukere samt opprette biler til organisasjonen i realtime med oppdateringer av lister

@@ -22,13 +22,13 @@ block content
         .column1
             h1 Members
             select(id="members" name="member" multiple="multiple")
-            button Add to admins
-            button Remove from organization
+            button#addAdmin Add to admins
+            button#removeMember Remove from organization
         .column2
             h1 Admins
             select(id="admins" name="admins" multiple="multiple")
-            button Remove from admins
+            button#removeAdmin Remove from admins
         .column3
             h1 Users
             select(id="users" name="users" multiple="multiple")
-            button Add to organization
+            button#addMember Add to organization

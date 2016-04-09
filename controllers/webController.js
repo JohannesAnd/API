@@ -101,6 +101,44 @@ exports.PostNewOrganization = function postNewOrg(req, res, cb) {
     });
 };
 
+exports.PostOrganizationAddUser = function postOrganizationAddUser(req, res, cb) {
+    var orgId = req.params.id;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Member", function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+}
+
+exports.PostOrganizationAddAdmin = function postOrganizationAddAdmin(req, res, cb) {
+    var orgId = req.params.id;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Admin", function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+}
+
+exports.PostOrganizationRemoveUser = function postOrganizationRemoveUser(req, res, cb) {
+    var orgId = req.params.id;
+    var user = req.body.user_id;
+    organizationService.removeFromOrg(user, orgId, function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+}
+
+exports.PostOrganizationRemoveAdmin = function postOrganizationRemoveAdmin(req, res, cb) {
+    var orgId = req.params.id;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Member", function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+}
+
+
+
 exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var org = {};
     var isAdmin;
@@ -143,14 +181,14 @@ exports.GetCarDetails = function getCarDetails(req, res) {
 
 exports.EditOrganization = function editOrg(req, res, cb) {
     var id = req.params.id;
-    organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
+    organizationService.getUserOrgRole(req.user, id, function(err, role) {
         if (err) { return cb(err); }
-        if (isAdmin) {
+        if (role == "Admin") {
             var query = "SELECT * FROM Organizations WHERE id = ?";
             connection.query(query, id, function(err, rows) {
                 res.render("organization/EditOrganization", {org: rows[0]});
             });
-        } else{
+        } else {
             res.redirect("/organizations/" + id);
         }
     });
@@ -179,7 +217,7 @@ exports.GetCarTrip = function getCarTrip(req, res, cb) {
 };
 
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
-    var query = "SELECT DISTINCT U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.name ORDER BY U.name ASC";
+    var query = "SELECT DISTINCT U.id, U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
     connection.query(query, req.params.id, function(err, rows) {
         if (err) { return cb(err); }
         var results = {members: [], admins: [], users: []};
