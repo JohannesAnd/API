@@ -2,11 +2,16 @@
   position: relative;
   top: 0;
   left: 0;
+  max-width: 50%;
+  display: inline-block;
+  @media (max-width: 1100px) {
+    max-width: 100%;
+  }
 }
 
-.trip.heading {
+.trip-heading {
   width: 100%;
-  font-size: 14pt;
+  font-size: 2rem;
   font-weight: lighter;
   text-align: center;
   padding-top: 6pt;
@@ -27,7 +32,7 @@
 .tripSimpleLabel {
   position: absolute;
   color: white;
-  font-size: 11pt;
+  font-size: .8rem;
   text-align: left;
   left: 23%;
   font-weight: lighter;
