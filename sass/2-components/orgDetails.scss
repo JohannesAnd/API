@@ -1,0 +1,87 @@
+.orgContainer a { color: #000000; text-decoration: none}
+.orgContainer a:hover { color: #666; text-decoration: none}
+
+.orgContainer h1{
+    font-size: 50;
+}
+
+.orgContainer{
+    width: 100%;
+    display: inline-block;
+}
+
+.people {
+    background: #ccd8ea;
+    margin: 10px 2% 10px 0;
+    padding: 10px;
+    width: 30%;
+    float: left;
+    border-radius: 5px;
+    @media (max-width: 1000px) {
+        width: 100%
+    }
+}
+
+.people h2{
+    left: 0px;
+    margin-bottom: 0px
+}
+
+.people .members{
+    display: inline-block;
+}
+
+.user{
+    float: left;
+    padding: 5px;
+}
+
+.cars {
+    background: #ccd8ea;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    width: 68%;
+    float:left;
+    @media (max-width: 1000px) {
+        width: 100%
+    }
+}
+
+#overviewLink {
+    display: inline-block;
+    width: 100%;
+    padding: 5px;
+}
+
+.car {
+    display: inline-block;
+    background: #dee5f0;
+    margin: 0 10px 10px 0;
+    padding: 5px;
+    min-width: 150px;
+    float: left;
+    border-radius: 5px;
+}
+
+.car table{
+    margin: 0;
+    width: initial;
+
+}
+.car td{
+    padding: 3px;    
+}
+
+.car h3{
+    text-align: left;
+    float: left;
+    padding: 5px;
+    margin: 0;
+}
+
+.tripIcon{
+    float: right;
+    width: 30px;
+    margin: 2px;
+}

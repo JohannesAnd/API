@@ -3,19 +3,46 @@ extends ./../MainMenu
 block header
 
 block content
-    h1= org.name
-    if is_admin || user.is_admin
-        a(href="/organizations/" + org.id + "/edit")
+    .orgContainer
+        h1= org.name
+        .people
+            h2 Members:
+            .members
+                for member in org.members
+                    if member.role == "Member"
+                        a(href="/user/#{member.id}").user=member.name
+
+            h2 Admins:
+            .members
+                for member in org.members
+                    if member.role == "Admin"
+
+                        a(href="/user/#{member.id}").user=member.name
+
+        .cars
+            h2 Cars:
+            for car in org.cars
+                .car
+                    h3 #{car.registration}
+                    if role == "Admin"
+                        a(href="/car/#{car.registration}/edit")
+                            img(src="/images/cog.png" title="Car Settings").tripIcon
+                    a(href="/car/#{car.registration}/trips")
+                        img(src="/images/tripsIcon.png" title="Car trips").tripIcon
+
+                    table
+                        tr
+                            td #[b Merke:]
+                            td #{car.make}
+                        tr
+                            td #[b Modell:]
+                            td #{car.type}
+                        tr
+                            td #[b Årsmodell:]
+                            td #{car.prodYear}
+
+            a(href="/organizations/#{org.id}/carOverview")#overviewLink Map view
+
+    if role == "Admin"
+        a(href="/organizations/#{org.id}/edit")
             button Edit
-
-    a(href="/organizations/"+org.id+"/carOverview") Car Overview
-    h2 Members:
-    ul
-    for member in org.members
-        li=member.name
-
-    h2 Cars:
-    ul
-    for car in org.cars
-        li
-            a(href="/car/" + car.registration + "/trips")= car.registration

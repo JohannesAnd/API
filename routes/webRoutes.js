@@ -45,6 +45,7 @@ module.exports = function(app, passport) {
     app.get("/",                webController.Landing);
     app.get("/signOut",         webController.SignOut);
     app.get("/signIn",          webController.SignIn);
+
     app.post("/signIn",         passport.authenticate("local", {successRedirect: "/", failureRedirect: "/"}));
     app.post("/newUser",        webController.NewUser);
     app.post("/checkUsername",  webController.CheckUsername);

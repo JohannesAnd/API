@@ -18,8 +18,8 @@ exports.getCarDetails = function(registration, cb) {
 
 exports.getCarsFromOrg = function(orgID, cb) {
     var query = "SELECT * FROM Cars WHERE organization_id=?";
-    connection.query(query, orgID, function(err, rows){ cb(err, rows)} );
-}
+    connection.query(query, orgID, cb);
+};
 
 exports.getCarTripsWithRoute = function(car_id, cb){
     var query = "SELECT T.id, T.user_id, T.car_id, T.start_time, U.Name AS user, TV.latitude, TV.longitude FROM Trips AS T " +
@@ -34,19 +34,19 @@ exports.getCarTripsWithRoute = function(car_id, cb){
         rows.forEach(function (row) {
             if (!(row.id in trips)){
                 trips[row.id] = row;
-                trips[row.id].start_time = moment(trips[row.id].start_time)
-                trips[row.id].route = [{lat: row.latitude, lon: row.longitude}]
+                trips[row.id].start_time = moment(trips[row.id].start_time);
+                trips[row.id].route = [{lat: row.latitude, lon: row.longitude}];
                 delete trips[row.id].latitude;
                 delete trips[row.id].longitude;
             }
             else
                 trips[row.id].route.push({lat: row.latitude, lon: row.longitude});
-        })
+        });
         return cb(null, trips);
-    })
-}
+    });
+};
 
 exports.getTripVerticiesFromTrip = function(tripID, cb) {
     var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ? ORDER BY registration_time ASC";
     connection.query(query, tripID, cb);
-}
+};
