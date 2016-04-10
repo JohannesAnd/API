@@ -1,0 +1,13 @@
+extends ./../MainMenu
+
+block content
+    .orgContainer
+        h1= org.name
+        h2 Add new car
+        form(action="/organizations/#{org_id}/newCar" method="post")
+            fielset
+                input(id="reg" name="reg" type="text" placeholder="Registration" required)
+                input(id="make" name="make" type="text" placeholder="Make")
+                input(id="model" name="model" type="text" placeholder="Model")
+                input(id="year" name="year" type="text" placeholder="Production year")
+                input(type="submit" value="Save car")

@@ -16,6 +16,18 @@ exports.getCarDetails = function(registration, cb) {
     });
 };
 
+exports.getCar = function(registration, cb) {
+    var query = "SELECT * FROM Cars WHERE registration = ?";
+    connection.query(query, registration, function(err, rows){
+        return cb(err, rows.length == 1 ? rows[0]: null);
+    });
+};
+
+exports.deleteCar = function (registration, cb) {
+    var query = "DELETE FROM Cars WHERE registration = ?";
+    connection.query(query, registration, cb);
+};
+
 exports.getCarsFromOrg = function(orgID, cb) {
     var query = "SELECT * FROM Cars WHERE organization_id=?";
     connection.query(query, orgID, cb);

@@ -18,15 +18,25 @@ block content
                     if member.role == "Admin"
 
                         a(href="/user/#{member.id}").user=member.name
+            if role == "Admin"
+                a(href="/organizations/#{org.id}/edit").buttonlink
+                    button Edit
 
         .cars
-            h2 Cars:
+            .spanner
+                h2 Cars:
+                if role == "Admin"
+                    a(href="/organizations/#{org.id}/newcar")
+                        img(src="/images/add.png" title="Car Settings").tripIcon
             for car in org.cars
                 .car
                     h3 #{car.registration}
                     if role == "Admin"
+                        a(href="/car/#{car.registration}/delete")
+                            img(src="/images/delete.png" title="Car Settings").tripIcon
                         a(href="/car/#{car.registration}/edit")
                             img(src="/images/cog.png" title="Car Settings").tripIcon
+
                     a(href="/car/#{car.registration}/trips")
                         img(src="/images/tripsIcon.png" title="Car trips").tripIcon
 
@@ -41,8 +51,5 @@ block content
                             td #[b Årsmodell:]
                             td #{car.prodYear}
 
-            a(href="/organizations/#{org.id}/carOverview")#overviewLink Map view
-
-    if role == "Admin"
-        a(href="/organizations/#{org.id}/edit")
-            button Edit
+            a(href="/organizations/#{org.id}/carOverview").buttonlink
+                button Map View

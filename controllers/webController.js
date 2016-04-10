@@ -142,6 +142,13 @@ exports.OrganizationList = function orgList(req, res, cb) {
     });
 };
 
+exports.NewCar = function newCar(req, res, cb) {
+    organizationService.getOrg(req.params.orgid, function (err, org) {
+        if (err) { return cb(err); }
+        res.render("car/newcar", {org:org});
+    });
+};
+
 exports.OrganizationDetails = function orgDetails(req, res, cb) {
     var orgid = req.params.orgid;
     organizationService.getOrg(orgid, function (err, org) {
@@ -164,6 +171,13 @@ exports.GetCarDetails = function getCarDetails(req, res, cb) {
     carService.getCarDetails(req.params.registration, function(err, data) {
         if (err) { return cb(err); }
         res.json({data: data});
+    });
+};
+
+exports.DeleteCar = function deleteCar(req, res, cb) {
+    carService.deleteCar(req.params.registration, function (err) {
+        if (err) { return cb(err); }
+        res.redirect("/organizations/" + req.params.orgid);
     });
 };
 
@@ -217,13 +231,13 @@ exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
     });
 };
 
-exports.NewCar = function NewCar(req, res, cb) {
+exports.PostNewOrganizationCar = function postNewOrganizationCar(req, res, cb) {
     var query = "INSERT INTO Cars VALUES(?, ?, ?, ?, ?)";
     connection.query(query,
         [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.orgid],
         function(err){
             if (err) { return cb(err); }
-            res.redirect("/organizations/" + req.params.orgid + "/edit");
+            res.redirect("/organizations/" + req.params.orgid);
         });
 };
 

@@ -5,15 +5,26 @@
     font-size: 50;
 }
 
+.orgContainer h2{
+    font-size: 20;
+}
+
 .orgContainer{
     width: 100%;
     display: inline-block;
+}
+
+.spanner {
+    display: inline-block;
+    width: 100%;
 }
 
 .people {
     background: #ccd8ea;
     margin: 10px 2% 10px 0;
     padding: 10px;
+    position: relative;
+    min-height: 300px;
     width: 30%;
     float: left;
     border-radius: 5px;
@@ -29,6 +40,7 @@
 
 .people .members{
     display: inline-block;
+    min-height: 100px;
 }
 
 .user{
@@ -36,11 +48,17 @@
     padding: 5px;
 }
 
+.topMargin{
+    margin-top: 10px;
+}
+
 .cars {
     background: #ccd8ea;
     margin: 10px 0 10px 0;
     padding: 10px;
+    position: relative;
     border-radius: 5px;
+    min-height: 300px;
     width: 68%;
     float:left;
     @media (max-width: 1000px) {
@@ -48,9 +66,18 @@
     }
 }
 
-#overviewLink {
+.cars h2{
     display: inline-block;
+    margin: 0;
+}
+
+.buttonlink {
+    display: inline-block;
+    position: absolute;
+    bottom: 0px;
+    left:0px;
     width: 100%;
+    margin: 5px;
     padding: 5px;
 }
 
@@ -60,6 +87,7 @@
     margin: 0 10px 10px 0;
     padding: 5px;
     min-width: 150px;
+    min-height: 130px;
     float: left;
     border-radius: 5px;
 }
