@@ -1,0 +1,20 @@
+extends ./../MainMenu
+
+block content
+    .orgContainer
+        h1= title
+        h2= subtitle
+        if error
+            p#error
+                | #{error}
+        .form
+            form(action="#{post_url}" method="post")
+                fielset
+                    input(id="id" name="id" type="text" placeholder="RFID" value="#{values.id}" required)
+                    if user.is_admin
+                        p Admin:
+                            - checked = (values.is_admin == 1) ? "checked" : "";
+                            input(id="is_admin" name="is_admin" type="checkbox" checked=(values.is_admin=== 1 ? "checked" : undefined) )
+                    input(id="name" name="name" type="text" placeholder="Name" value="#{values.name}")
+                    input(id="password" name="password" type="password" placeholder="passord" value="#{values.password}")
+                    input(type="submit" value="#{buttonText}")

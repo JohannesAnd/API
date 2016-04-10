@@ -1,0 +1,15 @@
+extends ./../MainMenu
+
+block content
+    .orgContainer
+        a(href="/users") < Back to users
+        h1= showingUser.name
+        p RFID: #{showingUser.id}
+        p Admin: #{showingUser.is_admin}
+        p Name: #{showingUser.name}
+
+        if user.is_admin || user.id == showingUser.id
+            a(href="/users/#{showingUser.id}/edit")
+                button Edit user
+            a(href="/users/#{showingUser.id}/delete")
+                button Delete user

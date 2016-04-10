@@ -7,7 +7,10 @@ block header
 
 
 block content
-    #map_canvas
-    h1="Car Overview for "+org.name
-    #active
-    #inactive
+    .orgContainer
+        a(href="/organizations/#{org.id}") < Back to #{org.name}
+        #map_canvas
+        br
+        h2="Car Overview for "+org.name
+        #active
+        #inactive

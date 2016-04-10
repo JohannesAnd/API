@@ -10,15 +10,12 @@ function getMembers() {
 }
 
 function setMembers(data) {
-    $("#admins").html(data.users.admins.map(function(user){
-        return "<option value='" + user.id + "'>" + user.name + "</option>";
-    }));
-    $("#members").html(data.users.members.map(function(user){
-        return "<option value='" + user.id + "'>" + user.name + "</option>";
-    }));
-    $("#users").html(data.users.users.map(function(user){
-        return "<option value='" + user.id + "'>" + user.name + "</option>";
-    }));
+    $("#admins, #members, #users").empty();
+    $.each(data.users, function(i, user) {
+        $("#"+ (user.role != null ? user.role.toLowerCase() + "s": "users")).append(
+            "<option value='" + user.id + "'>" + user.name + "</option>"
+        );
+    });
 }
 
 $(document).ready(function() {

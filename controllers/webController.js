@@ -12,6 +12,7 @@ connection.connect();
 
 var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
+var userService = require("./../services/userService");
 
 exports.Landing = function Landing(req, res) {
     if(!req.user){
@@ -30,11 +31,60 @@ exports.SignOut = function signOut(req, res) {
 };
 
 exports.Users = function users(req, res, cb) {
-    connection.query("SELECT * from Users", function (err, rows) {
+    userService.getRelatedUsers(req.user, function (err, rows) {
+        if (err) { return cb(err); }
+        res.render("user/users", {users: rows});
+    });
+};
+
+exports.UsersNew = function usersNew(req, res) {
+    res.render("user/newUserDetailed", {error: req.query.error, formURL: "/users/new", retURL: "/users"});
+};
+
+exports.UserShow = function userShow(req, res, cb) {
+    userService.getUserById(req.params.userid, function(err, user){
+        if (err) { return cb(err); }
+        res.render("user/userShow", {showingUser: user});
+    });
+};
+
+exports.UserEdit = function userEdit(req, res, cb) {
+    userService.getUserById(req.params.userid, function(err, user){
+        if (err) { return cb(err); }
+        res.render("user/userEdit", {
+            title: user.name,
+            subtitle: "Edit user",
+            post_url: "/users/" + req.params.userid + "/edit",
+            buttonText: "Save user",
+            error: req.query.error,
+            values: {id: user.id , is_admin: user.is_admin, name: user.name, password: user.password}
+        });
+    });
+};
+
+exports.UserDelete = function userDelete(req, res, cb) {
+    userService.deleteUser(req.params.userid, function(err) {
+        if (err) { return cb(err); }
+        if (req.params.userid == req.user.id)
+            return exports.SignOut(req, res, cb);
+        return res.redirect("/users");
+    });
+};
+
+exports.PostUserEdit = function postUserEdit(req, res, cb) {
+    var form = req.body;
+    userService.parseUserForm(req.user, form, function (err, updatedUser) {
         if (err) {
-            return cb(err);
+            return res.redirect("/users/" + req.params.userid + "/edit?error=" + err);
         }
-        res.render("UserList", {users: rows});
+        userService.updateUser(req.params.userid, updatedUser, function (err) {
+            if (err) { return cb(err); }
+            if (req.params.userid == req.userid && req.body.name != req.user.name){
+                req.logout();
+                return res.redirect("/");
+            }
+            return res.redirect("/users");
+        });
     });
 };
 
@@ -54,20 +104,22 @@ exports.CheckUsername = function checkUsername(req, res, cb) {
     });
 };
 
-exports.NewUser = function newUser(req, res, cb) {
-    var form = req.body;
-    var user = {id: form.id, name: form.name, password: form.password};
-    if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
-        connection.query("INSERT INTO Users SET ?", user, function(err){
-            if (err) { return cb(err);}
-            res.redirect("/users");
-        });
-    }
-    else
-        res.redirect("/users"); // TODO! SHOULD GIVE ERROR!
+exports.NewUser = function newUser(req, res) {
+    res.render("user/newUser", {error: req.query.error, formURL: "/newuser", retURL: "/"});
 };
 
-
+exports.PostNewUser = function postNewUser(req, res, cb) {
+    var form = req.body;
+    userService.parseUserForm(req.user, form, function (err, newUser) {
+        if (err) { 
+            return res.redirect(req.query.formURL + "?error=" + err);
+        }
+        userService.newUser(newUser, function(err){
+            if (err) { return cb(err);}
+            return res.redirect(req.query.retURL);
+        });
+    });
+};
 
 exports.NewOrganization = function newOrg(req, res) {
     res.render("organization/NewOrganization");
@@ -143,10 +195,10 @@ exports.OrganizationList = function orgList(req, res, cb) {
 };
 
 exports.NewCar = function newCar(req, res, cb) {
-    var org_id = req.params.orgid
+    var org_id = req.params.orgid;
     organizationService.getOrg(org_id, function (err, org) {
         if (err) { return cb(err); }
-        res.render("car/newcar", {
+        res.render("car/carEdit", {
             title: org.name,
             subtitle: "New Car",
             post_url: "/organizations/"+org_id+"/newCar",
@@ -206,7 +258,7 @@ exports.EditOrganization = function editOrg(req, res, cb) {
 exports.EditCar = function editCar(req, res, cb) {
     carService.getCar(req.params.registration, function(err, car){
         if (err) { return cb(err); }
-        res.render("car/newcar", {
+        res.render("car/carEdit", {
             title: car.registration,
             subtitle: "Edit Car",
             post_url: "/car/"+car.registration+"/edit",
@@ -217,7 +269,7 @@ exports.EditCar = function editCar(req, res, cb) {
 };
 
 exports.PostEditCar = function postEditCar(req, res, cb) {
-    carService.updateCar(req.params.registration, req.body, function (err, result) {
+    carService.updateCar(req.params.registration, req.body, function (err) {
         if (err) { return cb(err); }
         res.redirect("/organizations/" + req.params.orgid);
     });
@@ -241,29 +293,18 @@ exports.GetCarTrip = function getCarTrip(req, res, cb) {
 };
 
 exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
-    var query = "SELECT DISTINCT U.id, U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.id ORDER BY U.name ASC";
-    connection.query(query, req.params.orgid, function(err, rows) {
+    organizationService.getUsersWithOrgRoles(req.params.orgid, function(err, rows) {
         if (err) { return cb(err); }
-        var results = {members: [], admins: [], users: []};
-        rows.forEach(function(row){
-            if (row.role === "Admin" && row.org_id === parseInt(req.params.orgid)) {
-                results.admins.push(row);
-            }else if (row.role === "Member" && row.org_id === parseInt(req.params.orgid)){
-                results.members.push(row);
-            }else { //Shows some users twice.. Must fix
-                results.users.push(row);
-            }
-        });
-        res.json({users: results});
+        res.json({users: rows});
     });
 };
 
 exports.PostNewOrganizationCar = function postNewOrganizationCar(req, res, cb) {
     req.body.organization_id = req.params.orgid;
     carService.newCar(req.body, function(err){
-            if (err) { return cb(err); }
-            res.redirect("/organizations/" + req.params.orgid);
-        });
+        if (err) { return cb(err); }
+        res.redirect("/organizations/" + req.params.orgid);
+    });
 };
 
 exports.CarOverview = function co(req, res, next) {

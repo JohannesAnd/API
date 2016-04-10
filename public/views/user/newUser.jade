@@ -1,0 +1,26 @@
+extends ./../FullscreenBackground
+
+block header
+    script(src='js/checkUsername.js', type='text/javascript')
+
+block body
+    div#landing
+        #landingForm
+            a(href="/")
+                img(src="/images/Logo.png")
+            p#error
+                if error
+                    | #{error}
+            .form
+                form(action="/newUser?retURL=#{retURL}&formURL=#{formURL}", method="post")
+                    fieldset
+                        input(id="id", name="id" type="text", value="", placeholder="RFID")
+
+                        input(id="name", name="name" type="text", value="", placeholder="Name")
+
+                        input(id="password", name="password" type="password", placeholder="Password")
+
+                        input(id="password2", name="password2" type="password", placeholder="Repeat password")
+
+                        input(id="submitUser" type="submit" value="Create user" disabled)
+                        p#usernameHelper

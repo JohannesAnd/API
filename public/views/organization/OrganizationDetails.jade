@@ -3,21 +3,23 @@ extends ./../MainMenu
 block header
 
 block content
+
     .orgContainer
+        a(href="/organizations") < Back to organizations
         h1= org.name
         .orgBlock.people
             h2 Members:
             .members
                 for member in org.members
                     if member.role == "Member"
-                        a(href="/user/#{member.id}").user=member.name
+                        a(href="/users/#{member.id}").user=member.name
 
             h2 Admins:
             .members
                 for member in org.members
                     if member.role == "Admin"
 
-                        a(href="/user/#{member.id}").user=member.name
+                        a(href="/users/#{member.id}").user=member.name
             if role == "Admin"
                 a(href="/organizations/#{org.id}/edit").buttonlink
                     button Edit

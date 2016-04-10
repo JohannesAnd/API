@@ -31,6 +31,18 @@ exports.removeFromOrg = function(userID, org, cb) {
     connection.query(query, [userID, org], function results(err, rows) { cb(err, rows); });
 };
 
+exports.getUsersWithOrgRoles = function(orgID, cb) {
+    var query = "SELECT * FROM (" +
+                    "SELECT U.id, U.name, OM.role FROM Users AS U " +
+                        "JOIN OrgMembers AS OM ON OM.user_id = U.id " +
+                    "WHERE OM.org_id = ? " +
+                    "UNION " +
+                    "SELECT U.id, U.name, NULL as role FROM Users AS U " +
+                        "LEFT JOIN OrgMembers AS OM ON OM.user_id = U.id " +
+                    "WHERE OM.org_id <> ? OR OM.org_id IS NULL) AS C " +
+                "GROUP BY C.id";
+    connection.query(query, [orgID, orgID], cb);
+};
 
 exports.getUserRelatedOrgs = function(user, cb) {
     if(user.is_admin){
