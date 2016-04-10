@@ -19,18 +19,22 @@
     width: 100%;
 }
 
-.people {
+.orgBlock {
     background: #ccd8ea;
-    margin: 10px 2% 10px 0;
-    padding: 10px;
+    padding: 10px 10px 50px 10px;
+    margin: 10px 0 10px 0;
     position: relative;
-    min-height: 300px;
-    width: 30%;
+    min-height: 250px;
     float: left;
     border-radius: 5px;
-    @media (max-width: 1000px) {
-        width: 100%
+    @media (max-width: 600px) {
+        width: 100% !important
     }
+}
+
+.people {
+    margin-right: 2%;
+    width: 30%;
 }
 
 .people h2{
@@ -40,7 +44,7 @@
 
 .people .members{
     display: inline-block;
-    min-height: 100px;
+    min-height: 50px;
 }
 
 .user{
@@ -53,17 +57,7 @@
 }
 
 .cars {
-    background: #ccd8ea;
-    margin: 10px 0 10px 0;
-    padding: 10px;
-    position: relative;
-    border-radius: 5px;
-    min-height: 300px;
     width: 68%;
-    float:left;
-    @media (max-width: 1000px) {
-        width: 100%
-    }
 }
 
 .cars h2{
@@ -95,8 +89,8 @@
 .car table{
     margin: 0;
     width: initial;
-
 }
+
 .car td{
     padding: 3px;    
 }

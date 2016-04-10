@@ -143,9 +143,16 @@ exports.OrganizationList = function orgList(req, res, cb) {
 };
 
 exports.NewCar = function newCar(req, res, cb) {
-    organizationService.getOrg(req.params.orgid, function (err, org) {
+    var org_id = req.params.orgid
+    organizationService.getOrg(org_id, function (err, org) {
         if (err) { return cb(err); }
-        res.render("car/newcar", {org:org});
+        res.render("car/newcar", {
+            title: org.name,
+            subtitle: "New Car",
+            post_url: "/organizations/"+org_id+"/newCar",
+            buttonText: "Add car",
+            values: {registration: "", make: "", type: "", prodYear: ""}
+        });
     });
 };
 
@@ -196,6 +203,26 @@ exports.EditOrganization = function editOrg(req, res, cb) {
     });
 };
 
+exports.EditCar = function editCar(req, res, cb) {
+    carService.getCar(req.params.registration, function(err, car){
+        if (err) { return cb(err); }
+        res.render("car/newcar", {
+            title: car.registration,
+            subtitle: "Edit Car",
+            post_url: "/car/"+car.registration+"/edit",
+            buttonText: "Save car",
+            values: {registration: car.registration, make: car.make, type: car.type, prodYear: car.prodYear }
+        });
+    });
+};
+
+exports.PostEditCar = function postEditCar(req, res, cb) {
+    carService.updateCar(req.params.registration, req.body, function (err, result) {
+        if (err) { return cb(err); }
+        res.redirect("/organizations/" + req.params.orgid);
+    });
+};
+
 exports.GetCarTrips = function getCarTrips(req, res, cb) {
     carService.getCarTripsWithRoute(req.params.registration, function(err, trips){
         if (err) {
@@ -232,10 +259,8 @@ exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
 };
 
 exports.PostNewOrganizationCar = function postNewOrganizationCar(req, res, cb) {
-    var query = "INSERT INTO Cars VALUES(?, ?, ?, ?, ?)";
-    connection.query(query,
-        [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.orgid],
-        function(err){
+    req.body.organization_id = req.params.orgid;
+    carService.newCar(req.body, function(err){
             if (err) { return cb(err); }
             res.redirect("/organizations/" + req.params.orgid);
         });

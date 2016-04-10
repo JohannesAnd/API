@@ -60,12 +60,13 @@ module.exports = function(app, passport) {
     app.post("/checkUsername",  webController.CheckUsername);
 
     app.get("/users",                   ensureAuthenticated, webController.Users);
-    app.get("/car/:registration",       ensureAuthenticated, webController.CarDetails); // Is this used?
+    app.get("/car/:registration/edit",  ensureAuthenticated, ensureCarOrgAdmin, webController.EditCar);
     app.get("/car/:registration/trip",  ensureAuthenticated, webController.GetCarDetails); // Is This used?
     app.get("/car/:registration/trips",    ensureAuthenticated, webController.GetCarTrips);
     app.get("/car/:registration/:tripid/trip", ensureAuthenticated, webController.GetCarTrip);
 
     app.get("/car/:registration/delete", ensureAuthenticated, ensureCarOrgAdmin, webController.DeleteCar);
+    app.post("/car/:registration/edit",  ensureAuthenticated, ensureCarOrgAdmin, webController.PostEditCar)
 
     app.get("/organizations",                               ensureAuthenticated, webController.OrganizationList);
     app.get("/organizations/new",                           ensureAuthenticated, ensureAdmin, webController.NewOrganization);

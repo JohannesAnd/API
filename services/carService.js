@@ -23,10 +23,20 @@ exports.getCar = function(registration, cb) {
     });
 };
 
+exports.newCar = function (data, cb) {
+     var query = "INSERT INTO Cars SET ?";
+     connection.query(query, data, cb);
+}
+
 exports.deleteCar = function (registration, cb) {
     var query = "DELETE FROM Cars WHERE registration = ?";
     connection.query(query, registration, cb);
 };
+
+exports.updateCar = function (registration, data, cb) {
+    var query = "UPDATE Cars SET ? WHERE registration = ?";
+    connection.query(query, [data, registration], cb);
+}
 
 exports.getCarsFromOrg = function(orgID, cb) {
     var query = "SELECT * FROM Cars WHERE organization_id=?";

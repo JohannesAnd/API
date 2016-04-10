@@ -5,7 +5,7 @@ block header
 block content
     .orgContainer
         h1= org.name
-        .people
+        .orgBlock.people
             h2 Members:
             .members
                 for member in org.members
@@ -22,7 +22,7 @@ block content
                 a(href="/organizations/#{org.id}/edit").buttonlink
                     button Edit
 
-        .cars
+        .orgBlock.cars
             .spanner
                 h2 Cars:
                 if role == "Admin"
