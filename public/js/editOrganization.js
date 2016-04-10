@@ -1,6 +1,6 @@
 function getMembers() {
     $.ajax({
-        url: "/organizations/" + id + "/getUsers",
+        url: "/organizations/" + id + "/users",
         type: "get",
         cache: false,
         success: function(data) {

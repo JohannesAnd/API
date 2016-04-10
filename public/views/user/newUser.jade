@@ -12,7 +12,7 @@ block body
                 if error
                     | #{error}
             .form
-                form(action="/newUser?retURL=#{retURL}&formURL=#{formURL}", method="post")
+                form(action="/users/new?retURL=#{retURL}&formURL=#{formURL}", method="post")
                     fieldset
                         input(id="id", name="id" type="text", value="", placeholder="RFID")
 

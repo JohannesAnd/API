@@ -8,6 +8,17 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+exports.checkUserName = function(name, cb) {
+    var help = null;
+    connection.query("SELECT * FROM Users WHERE name = ?", name, function(err, rows){
+        if (name.length <= 1)
+            help = "Username is too short!";
+        else if (rows.length !== 0)
+            help = "Username is already taken!";
+        cb(err, help);
+    });
+};
+
 exports.getUserById = function (id, cb) {
     var query = "SELECT * FROM Users WHERE id = ?";
     connection.query(query, id, function(err, rows){

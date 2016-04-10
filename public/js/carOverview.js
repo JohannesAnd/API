@@ -14,7 +14,7 @@ $(document).ready(function() {
     var map = new google.maps.Map(mapCanvas, mapOptions);
     function updateCars(successFunc){
         $.ajax({
-            url: "/organizations/" + id + "/carOverview/getData",
+            url: "/organizations/" + id + "/carOverview/data",
             type: "get",
             cache: false,
             data: {},

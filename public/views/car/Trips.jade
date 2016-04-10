@@ -27,3 +27,6 @@ block content
                             p #{trip.kmDriven} km driven
                         else
                             p N/A
+
+                a(href="/car/" + registration + "/" + trip.id + "/delete").deleteTrip
+                    img(src="/images/delete.png" style=relative)

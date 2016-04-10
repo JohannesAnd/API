@@ -60,40 +60,44 @@ function forbidden(res){
 
 module.exports = function(app, passport) {
     app.get("/",                webController.Landing);
+    app.get("/signIn",          webController.Landing);
     app.get("/signOut",         webController.SignOut);
-    app.get("/signIn",          webController.SignIn);
     app.get("/newUser",         webController.NewUser);
 
     app.post("/signIn",         passport.authenticate("local", {successRedirect: "/", failureRedirect: "/"}));
-    app.post("/newUser",        webController.PostNewUser);
     app.post("/checkUsername",  webController.CheckUsername);
 
+    /* USER(S) */
     app.get("/users",                   ensureAuthenticated, webController.Users);
-    app.get("/users/new",               ensureAuthenticated, ensureAdmin, webController.UsersNew);
+    app.get("/users/new",               ensureAuthenticated, ensureAdmin, webController.UserNew);
     app.get("/users/:userid",           ensureAuthenticated, webController.UserShow);
     app.get("/users/:userid/edit",      ensureAuthenticated, ensureCanEditUser, webController.UserEdit);
     app.get("/users/:userid/delete",    ensureAuthenticated, ensureCanEditUser, webController.UserDelete);
 
     app.post("/users/:userid/edit",     ensureAuthenticated, ensureCanEditUser, webController.PostUserEdit);
+    app.post("/users/new",              webController.PostUserNew);
 
-    app.get("/car/:registration/edit",          ensureAuthenticated, ensureCarOrgAdmin, webController.EditCar);
-    app.get("/car/:registration/trips",         ensureAuthenticated, webController.GetCarTrips);
-    app.get("/car/:registration/:tripid/trip",  ensureAuthenticated, webController.GetCarTrip);
-    app.get("/car/:registration/delete",        ensureAuthenticated, ensureCarOrgAdmin, webController.DeleteCar);
+    /* CAR */
+    app.get("/car/:registration/edit",          ensureAuthenticated, ensureCarOrgAdmin, webController.CarEdit);
+    app.get("/car/:registration/delete",        ensureAuthenticated, ensureCarOrgAdmin, webController.CarDelete);
+    app.get("/car/:registration/trips",         ensureAuthenticated, webController.CarTrips);
+    app.get("/car/:registration/:tripid/trip",  ensureAuthenticated, webController.CarTrip);
+    app.get("/car/:registration/:tripid/delete",ensureAuthenticated, ensureCarOrgAdmin, webController.CarDeleteTrip);
 
-    app.post("/car/:registration/edit",         ensureAuthenticated, ensureCarOrgAdmin, webController.PostEditCar);
+    app.post("/car/:registration/edit",         ensureAuthenticated, ensureCarOrgAdmin, webController.PostCarEdit);
 
+    /* ORGANIZATION */
     app.get("/organizations",                               ensureAuthenticated, webController.OrganizationList);
-    app.get("/organizations/new",                           ensureAuthenticated, ensureAdmin, webController.NewOrganization);
+    app.get("/organizations/new",                           ensureAuthenticated, ensureAdmin, webController.OrganizationNew);
     app.get("/organizations/:orgid",                        ensureAuthenticated, ensureOrgMember, webController.OrganizationDetails);
-    app.get("/organizations/:orgid/newCar",                 ensureAuthenticated, ensureAdmin, webController.NewCar);
-    app.get("/organizations/:orgid/edit",                   ensureAuthenticated, ensureOrgAdmin, webController.EditOrganization);
-    app.get("/organizations/:orgid/getUsers",               ensureAuthenticated, ensureOrgMember, webController.GetOrgUsers);
-    app.get("/organizations/:orgid/carOverview",            ensureAuthenticated, ensureOrgMember, webController.CarOverview);
-    app.get("/organizations/:orgid/carOverview/getData",    ensureAuthenticated, ensureOrgMember, webController.CarOverviewData);
+    app.get("/organizations/:orgid/newcar",                 ensureAuthenticated, ensureAdmin, webController.OrganizationNewCar);
+    app.get("/organizations/:orgid/edit",                   ensureAuthenticated, ensureOrgAdmin, webController.OrganizationEdit);
+    app.get("/organizations/:orgid/users",                  ensureAuthenticated, ensureOrgMember, webController.OrganizationUsers);
+    app.get("/organizations/:orgid/carOverview",            ensureAuthenticated, ensureOrgMember, webController.OrganizationCarOverview);
+    app.get("/organizations/:orgid/carOverview/data",       ensureAuthenticated, ensureOrgMember, webController.OrganizationCarOverviewData);
 
-    app.post("/organizations/new",                          ensureAuthenticated, ensureAdmin, webController.PostNewOrganization);
-    app.post("/organizations/:orgid/newCar",                ensureAuthenticated, ensureOrgAdmin, webController.PostNewOrganizationCar);
+    app.post("/organizations/new",                          ensureAuthenticated, ensureAdmin, webController.PostOrganizationNew);
+    app.post("/organizations/:orgid/newCar",                ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationNewCar);
     app.post("/organizations/:orgid/edit/addUser",          ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationAddUser);
     app.post("/organizations/:orgid/edit/addAdmin",         ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationAddAdmin);
     app.post("/organizations/:orgid/edit/removeUser",       ensureAuthenticated, ensureOrgAdmin, webController.PostOrganizationRemoveUser);

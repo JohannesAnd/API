@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var moment     = require("moment");
 var connection = mysql.createConnection({
     host: "localhost",
     user: process.env.dbuser,
@@ -7,6 +8,11 @@ var connection = mysql.createConnection({
 });
 
 connection.connect();
+
+exports.newOrg = function (name, cb){
+    var query = "INSERT INTO Organizations VALUES(null, ?)";
+    connection.query(query, name, cb);
+};
 
 exports.getUserOrgRole = function(user, org, cb) {
     if (user.is_admin)
@@ -57,7 +63,34 @@ exports.getUserRelatedOrgs = function(user, cb) {
     }
 };
 
-exports.getOrg = function(org_id, cb) {
+exports.getOrgCarOverviewData = function(org_id, cb){
+    var query = "SELECT * FROM Cars AS C " +
+                    "JOIN Trips AS T ON T.car_id = C.registration " +
+                    "JOIN TripVertices AS TV ON TV.trip_id = T.id " +
+                "WHERE C.organization_id = ? AND registration_time IN (" +
+                    "SELECT MAX(registration_time) FROM TripVertices " +
+                        "JOIN Trips ON Trips.id = TripVertices.trip_id " +
+                    "WHERE C.registration = Trips.car_id)";
+    connection.query(query, org_id, function(err, rows) {
+        if(err) { return cb(err); }
+        var result = rows;
+        result.forEach(function(row) {
+            var date = moment(row.registration_time);
+            row["registration_time"] = date.format("Do MMMM YYYY HH:mm:ss");
+            row["active"] = date.isAfter(moment().subtract(2, "minute"));
+        });
+        cb(err, rows);
+    });
+};
+
+exports.getOrg = function (org_id, cb) {
+    var query = "SELECT * FROM Organizations WHERE id=?";
+    connection.query(query, org_id, function(err, rows){
+        return cb(err, rows.length == 1 ? rows[0]: null);
+    });
+};
+
+exports.getOrgDetailed = function(org_id, cb) {
     var querys = {
         org:        "SELECT * FROM Organizations WHERE id = ?",
         orgCars:    "SELECT * FROM Organizations AS O " +

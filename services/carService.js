@@ -72,3 +72,8 @@ exports.getTripVerticiesFromTrip = function(tripID, cb) {
     var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ? ORDER BY registration_time ASC";
     connection.query(query, tripID, cb);
 };
+
+exports.deleteTrip = function(tripID, cb){
+    var query = "DELETE FROM Trips WHERE id = ?";
+    connection.query(query, tripID, cb);
+};
