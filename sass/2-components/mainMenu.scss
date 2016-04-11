@@ -1,0 +1,71 @@
+#mainMenu{
+	padding: 0 3% 10px 3%;
+	border-bottom: 1px gray solid;
+	min-height: 40px;
+	#title, #menu{
+		display: inline-block;
+	}
+	#title > a > img {
+		max-height: 60px;
+		@media (max-width: 750px) {
+			max-height: 30px;
+		}
+		@media (max-width: 400px) {
+			display: none;
+		}
+	}
+	#menu{
+		.space{
+			display: inline-block;
+		}
+		padding-top: 40px;
+		float: right;
+		.short {
+			display: none;
+		}
+		.title {
+			padding-left: 6px;
+		}
+		@media (max-width: 750px) {
+			padding-top: 0;
+			font-size: 0.9rem;
+			line-height: 0.6rem;
+			.title {
+				display: block;
+				font-size: 0.6rem;
+				text-align: center;
+				padding-left: 0;
+			}
+			.short {
+				display: none;
+			}
+			.space {
+				display: none;
+			}
+		}
+		@media (max-width: 400px){
+			.short {
+				display: block;
+			}
+			.long {
+				display: none;
+			}
+		}
+		li {
+			display: inline-block;
+			align-content: right;
+			padding: 0 15px 15px 15px;
+			text-align: center;
+			a{
+				font-size: 1.2rem;
+			}
+		}
+	}
+	a {
+		color: black;
+		&:hover {
+			cursor: pointer;
+			color: gray;
+		}
+	}
+}
