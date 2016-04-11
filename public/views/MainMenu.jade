@@ -19,15 +19,18 @@ html
                 #menu
                     nav(role="full-horizontal")
                         ul
-                            li
-                                if user
+                            if user
+                                li
                                     a(href="/signOut") Sign out
-                                else
+                                li
+                                    a(href="/users/#{user.id}") #{user.name}
+                                li
+                                    a(href="/users") Users
+                                li
+                                    a(href="/organizations") Organizations
+                            else
+                                li
                                     a(href="/signIn") Sign in
-                            li
-                                a(href="/users") Users
-                            li
-                                a(href="/organizations") Organizations
             .content
                 block content
             .footer

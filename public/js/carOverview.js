@@ -14,7 +14,7 @@ $(document).ready(function() {
     var map = new google.maps.Map(mapCanvas, mapOptions);
     function updateCars(successFunc){
         $.ajax({
-            url: "/organizations/" + id + "/carOverview/getData",
+            url: "/organizations/" + id + "/carOverview/data",
             type: "get",
             cache: false,
             data: {},
@@ -30,12 +30,12 @@ $(document).ready(function() {
                     }
                     return (
                         "<div class='carContainer'>" +
-                            "<h1>" + car.registration + "</h1>" +
-                            "<h2>" + car.registration_time + "</h2>" +
-                            "<h2>" + car.trip_id + "</h2>" +
-                            "<h2>" + car.longitude + "</h2>" +
-                            "<h2>" + car.latitude + "</h2>" +
-                            "<h2>" + car.active + "</h2>" +
+                            "<h2>" + car.registration + "</h2>" +
+                            "<h3>" + car.registration_time + "</h3>" +
+                            "<h3>" + car.trip_id + "</h3>" +
+                            "<h3>" + car.longitude + "</h3>" +
+                            "<h3>" + car.latitude + "</h3>" +
+                            "<h3>" + car.active + "</h3>" +
                         "</div>"
                     );
                 }));

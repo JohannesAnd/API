@@ -1,0 +1,12 @@
+extends ./../MainMenu
+
+block content
+    #userList
+        ul
+            each user in users
+                a(href="/users/#{user.id}")
+                    li= user.name + " " + user.id
+
+    if user.is_admin
+        a(href="/users/new")
+            button New user

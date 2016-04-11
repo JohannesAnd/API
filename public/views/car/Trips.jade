@@ -1,19 +1,32 @@
 extends ./../MainMenu
 
 block content
-
     .trip-heading Trips by #{registration}
-        .trips
-            each trip in trips
-                .trip
-                    a(href="/car/" + registration + "/" + trip.id + "/trip")
-                        img(src="/images/WorkTrip.png" style=relative)
-                        img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?&zoom=auto&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true&path=#{trip.vertices}&sensor=false")
-                        .tripDayText
-                            p #{trip.date}
-                        .tripSimpleLabel.fuelAverage
-                            p #{trip.fuelAverage} L/km fuel
-                        .tripSimpleLabel.fuelUsed
+    .trips
+        each trip in trips
+            .trip
+                - route = "";
+                for point in trip.route
+                    - route += point.lat + "," + point.lon + "|";
+                - route = route.substring(0, route.length - 2);
+
+                a(href="/car/" + registration + "/" + trip.id + "/trip")
+                    img(src="/images/WorkTrip.png" style=relative)
+                    img(class="tripMap" src="http://maps.googleapis.com/maps/api/staticmap?&zoom=auto&scale=2&size=288x256&maptype=roadmap&format=png&visual_refresh=true&path=#{route}&sensor=false")
+                    .tripDayText
+                        p= trip.start_time.format("Do MMMM YYYY HH:mm:ss")
+                    .tripSimpleLabel.fuelAverage
+                        p #{trip.user}
+                    .tripSimpleLabel.fuelUsed
+                        if trip.fuelUsed
                             p #{trip.fuelUsed} L fuel used
-                        .tripSimpleLabel.kmdriven
+                        else
+                            p N/A
+                    .tripSimpleLabel.kmdriven
+                        if trip.kmDriven
                             p #{trip.kmDriven} km driven
+                        else
+                            p N/A
+
+                a(href="/car/" + registration + "/" + trip.id + "/delete").deleteTrip
+                    img(src="/images/delete.png" style=relative)

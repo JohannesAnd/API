@@ -1,24 +1,15 @@
-var mysql = require("mysql");
 var moment = require("moment");
-var connection = mysql.createConnection({
-    host: "localhost",
-    user: process.env.dbuser,
-    password: process.env.dbpassword,
-    database: "cars"
-});
 moment.locale("nb");
-
-connection.connect();
 
 var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
+var userService = require("./../services/userService");
 
 exports.Landing = function Landing(req, res) {
-    res.render("Landing");
-};
-
-exports.SignIn = function signIn(req, res) {
-    res.render("SignIn");
+    if(!req.user){
+        return res.render("SigninLanding");
+    }
+    res.render("LoggedInLanding");
 };
 
 exports.SignOut = function signOut(req, res) {
@@ -26,101 +17,92 @@ exports.SignOut = function signOut(req, res) {
     res.redirect("/");
 };
 
-exports.Users = function users(req, res, cb) {
-    connection.query("SELECT * from Users", function (err, rows) {
-        if (err) {
-            return cb(err);
-        }
-        res.render("UserList", {users: rows});
-    });
+exports.NewUser = function newUser(req, res) {
+    res.render("user/newUser", {error: req.query.error, formURL: "/newuser", retURL: "/"});
 };
 
 exports.CheckUsername = function checkUsername(req, res, cb) {
     var name = req.body.name;
-    var valid = false;
-    var help = "Username is too short!";
-    connection.query("SELECT * FROM Users WHERE name = ?", name, function(err, rows){
-        if (err) {
-            return cb(err);
-        }
-        if (name.length > 1){
-            valid = rows.length === 0;
-            help = valid ? " " : "Username is already taken!";
-        }
-        res.json({valid: valid, help: help});
+    userService.checkUserName(name, function (err, nameError) {
+        if (err) { return cb(err); }
+        res.json({valid: nameError === null, help: nameError ? nameError: ""});
     });
 };
 
-exports.NewUser = function newUser(req, res, cb) {
+/* USER(S) */
+
+exports.Users = function users(req, res, cb) {
+    userService.getRelatedUsers(req.user, function (err, rows) {
+        if (err) { return cb(err); }
+        res.render("user/users", {users: rows});
+    });
+};
+
+exports.UserNew = function userNew(req, res) {
+    res.render("user/newUserDetailed", {error: req.query.error, formURL: "/users/new", retURL: "/users"});
+};
+
+exports.UserShow = function userShow(req, res, cb) {
+    userService.getUserById(req.params.userid, function(err, user){
+        if (err) { return cb(err); }
+        res.render("user/userShow", {showingUser: user});
+    });
+};
+
+exports.UserEdit = function userEdit(req, res, cb) {
+    userService.getUserById(req.params.userid, function(err, user){
+        if (err) { return cb(err); }
+        res.render("user/userEdit", {
+            title: user.name,
+            subtitle: "Edit user",
+            post_url: "/users/" + req.params.userid + "/edit",
+            buttonText: "Save user",
+            error: req.query.error,
+            values: {id: user.id , is_admin: user.is_admin, name: user.name, password: user.password}
+        });
+    });
+};
+
+exports.UserDelete = function userDelete(req, res, cb) {
+    userService.deleteUser(req.params.userid, function(err) {
+        if (err) { return cb(err); }
+        if (req.params.userid == req.user.id)
+            return exports.SignOut(req, res, cb);
+        return res.redirect("/users");
+    });
+};
+
+exports.PostUserEdit = function postUserEdit(req, res, cb) {
     var form = req.body;
-    var user = {id: form.id, name: form.name, password: form.password};
-    if (form.password===form.password2 && form.password.length > 5 && form.name.length > 1){
-        connection.query("INSERT INTO Users SET ?", user, function(err){
-            if (err) { return cb(err);}
-            res.redirect("/users");
-        });
-    }
-};
-
-exports.OrganizationList = function orgList(req, res, cb) {
-    var query = "SELECT * FROM Organizations AS O LEFT JOIN Cars as C ON C.organization_id=O.id";
-
-    connection.query(query, function(err, rows) {
+    userService.parseUserForm(req.user, form, function (err, updatedUser) {
         if (err) {
-            return cb(err);
+            return res.redirect("/users/" + req.params.userid + "/edit?error=" + err);
         }
-        var resDict = {};
-        rows.forEach(function(row) {
-            if (row.id in resDict) {
-                resDict[row.id]["cars"].push(row.registration);
-            } else {
-                resDict[row.id] = row;
-                resDict[row.id]["cars"] = [row.registration];
-            }
-        });
-        res.render("organization/OrganizationsList", {organizations: resDict});
-    });
-};
-
-exports.NewOrganization = function newOrg(req, res) {
-    res.render("organization/NewOrganization");
-};
-
-exports.PostNewOrganization = function postNewOrg(req, res, cb) {
-    var name = req.body.name;
-    var query = "INSERT INTO Organizations VALUES(null, ?)";
-    connection.query(query, name, function(err){
-        if (err) { return cb(err); }
-        res.redirect("/organizations");
-    });
-};
-
-exports.OrganizationDetails = function orgDetails(req, res, cb) {
-    var org = {};
-    var isAdmin;
-    var id = req.params.id;
-    var orgQuery = "SELECT * FROM Organizations AS O WHERE O.id = ?";
-    var carQuery = "SELECT * FROM Cars AS C WHERE C.organization_id = ?";
-    var userQuery = "SELECT * FROM OrgMembers as O JOIN Users AS U ON U.name=O.user_id WHERE O.org_id = ?";
-    connection.query(orgQuery, id, function(err, rows) {
-        if (err) { return cb(err); }
-        org = rows[0];
-        connection.query(carQuery, id, function(err, rows) {
+        userService.updateUser(req.params.userid, updatedUser, function (err) {
             if (err) { return cb(err); }
-            org["cars"] = rows;
-            connection.query(userQuery, id, function(err, rows) {
-                if (err) { return cb(err); }
-                org["members"] = rows;
-                rows.forEach(function(user){
-                    if (user.id === req.user.id && user.role === "Admin") {
-                        isAdmin = true;
-                    }
-                });
-                res.render("organization/OrganizationDetails", {org: org, is_admin: isAdmin});
-            });
+            if (req.params.userid == req.userid && req.body.name != req.user.name){
+                req.logout();
+                return res.redirect("/");
+            }
+            return res.redirect("/users");
         });
     });
 };
+
+exports.PostUserNew = function postUserNew(req, res, cb) {
+    var form = req.body;
+    userService.parseUserForm(req.user, form, function (err, newUser) {
+        if (err) { 
+            return res.redirect(req.query.formURL + "?error=" + err);
+        }
+        userService.newUser(newUser, function(err){
+            if (err) { return cb(err);}
+            return res.redirect(req.query.retURL);
+        });
+    });
+};
+
+/* CAR */
 
 exports.CarDetails = function carDetails(req, res, cb) {
     carService.getCarDetails(req.params.registration, function(err){
@@ -129,103 +111,196 @@ exports.CarDetails = function carDetails(req, res, cb) {
     });
 };
 
-exports.GetCarDetails = function getCarDetails(req, res) {
-    carService.getCarDetails(req.params.registration, function(err, data) {
-        res.json({data: data});
+
+exports.CarEdit = function carEdit(req, res, cb) {
+    carService.getCar(req.params.registration, function(err, car){
+        if (err) { return cb(err); }
+        res.render("car/carEdit", {
+            title: car.registration,
+            subtitle: "Edit Car",
+            post_url: "/car/"+car.registration+"/edit",
+            buttonText: "Save car",
+            values: {registration: car.registration, make: car.make, type: car.type, prodYear: car.prodYear }
+        });
     });
 };
 
-exports.EditOrganization = function editOrg(req, res, cb) {
-    var id = req.params.id;
-    organizationService.isOrganizationAdmin(req.user, id, function(err, isAdmin) {
+exports.CarDelete = function carDelete(req, res, cb) {
+    carService.deleteCar(req.params.registration, function (err) {
         if (err) { return cb(err); }
-        if (isAdmin) {
-            var query = "SELECT * FROM Organizations WHERE id = ?";
-            connection.query(query, id, function(err, rows) {
-                res.render("organization/EditOrganization", {org: rows[0]});
+        res.redirect("/organizations/" + req.params.orgid);
+    });
+};
+
+exports.CarTrips = function carTrips(req, res, cb) {
+    carService.getCarTripsWithRoute(req.params.registration, function(err, trips){
+        if (err) {
+            return cb(err);
+        }
+        res.render("car/Trips", {trips: trips, registration: req.params.registration});
+    });
+};
+
+exports.CarTrip = function carTrip(req, res, cb) {
+    carService.getTripVerticiesFromTrip(req.params.tripid, function(err, rows){
+        if (err) { return cb(err); }
+
+        res.render("car/Trip", {vertices: rows, trip_id: req.params.orgid});
+    });
+};
+
+exports.CarDeleteTrip = function carDeleteTrip(req, res, cb) {
+    carService.deleteTrip(req.params.tripid, function (err) {
+        if (err) { return cb(err); }
+        res.redirect("/car/" + req.params.registration +"/trips");
+    });
+};
+
+exports.PostCarEdit = function postCarEdit(req, res, cb) {
+    carService.updateCar(req.params.registration, req.body, function (err) {
+        if (err) { return cb(err); }
+        res.redirect("/organizations/" + req.params.orgid);
+    });
+};
+
+
+
+exports.OrganizationList = function orgList(req, res, cb) {
+    organizationService.getUserRelatedOrgs(req.user, function(err, rows){
+        if (err) {
+            return cb(err);
+        }
+        var resDict = {};
+
+        var endFunc = function(){
+            res.render("organization/OrganizationsList", {organizations: resDict});
+        };
+        var status = 0;
+        rows.forEach(function(row) {
+            resDict[row.id] = row;
+            carService.getCarsFromOrg(row.id, function (err, cars) {
+                if (err) { return cb(err); }
+                resDict[row.id]["cars"] = cars;
+                status++;
+                if(status == rows.length)
+                    endFunc();
             });
-        } else{
+        });
+    });
+};
+
+exports.OrganizationNew = function newOrg(req, res) {
+    res.render("organization/NewOrganization");
+};
+
+exports.OrganizationDetails = function orgDetails(req, res, cb) {
+    var orgid = req.params.orgid;
+    organizationService.getOrgDetailed(orgid, function (err, org) {
+        if (err) { return cb(err); }
+        organizationService.getUserOrgRole(req.user, orgid, function(err, role){
+            if (err) { return cb(err); }
+            res.render("organization/OrganizationDetails", {org: org, role: role});
+        });
+    });
+};
+
+exports.OrganizationNewCar = function organizationNewCar(req, res, cb) {
+    var org_id = req.params.orgid;
+    organizationService.getOrg(org_id, function (err, org) {
+        if (err) { return cb(err); }
+        res.render("car/carEdit", {
+            title: org.name,
+            subtitle: "New Car",
+            post_url: "/organizations/"+org_id+"/newcar",
+            buttonText: "Add car",
+            values: {registration: "", make: "", type: "", prodYear: ""}
+        });
+    });
+};
+
+exports.OrganizationEdit = function editOrg(req, res, cb) {
+    var id = req.params.orgid;
+    organizationService.getUserOrgRole(req.user, id, function(err, role) {
+        if (err) { return cb(err); }
+        if (role == "Admin") {
+            organizationService.getOrgDetailed(id, function(err, org) {
+                if (err) { return cb(err); }
+                res.render("organization/EditOrganization", {org: org});
+            });
+        } else {
             res.redirect("/organizations/" + id);
         }
     });
 };
 
-exports.GetCarTrips = function getCarTrips(req, res, cb) {
-    carService.getCarTripOverview(req.params.registration, function(err, rows){
-        if (err) {
-            return cb(err);
-        }
-        res.render("car/Trips", {trips: rows, registration: req.params.registration});
-    });
-
-
-};
-
-exports.GetCarTrip = function getCarTrip(req, res, cb) {
-    var query = "SELECT * FROM TripVertices WHERE trip_id LIKE ?";
-    connection.query(query, req.params.id, function(err, rows){
+exports.OrganizationUsers = function getOrgUsers(req, res, cb) {
+    organizationService.getUsersWithOrgRoles(req.params.orgid, function(err, users) {
         if (err) { return cb(err); }
-
-        res.render("car/Trip", {vertices: rows, trip_id: req.params.id});
+        res.json({users: users});
     });
 };
 
-exports.GetOrgUsers = function getOrgUsers(req, res, cb) {
-    var query = "SELECT DISTINCT U.name, U.is_admin, O.role, O.org_id FROM Users AS U LEFT JOIN OrgMembers AS O ON O.user_id = U.name ORDER BY U.name ASC";
-    connection.query(query, req.params.id, function(err, rows) {
+exports.OrganizationCarOverview = function co(req, res, cb) {
+    organizationService.getOrg(req.params.orgid, function (err, org) {
         if (err) { return cb(err); }
-        var results = {members: [], admins: [], users: []};
-        rows.forEach(function(row){
-            if (row.role === "Admin" && row.org_id === parseInt(req.params.id)) {
-                results.admins.push(row);
-            }else if (row.role === "Member" && row.org_id === parseInt(req.params.id)){
-                results.members.push(row);
-            }else { //Shows some users twice.. Must fix
-                results.users.push(row);
-            }
-        });
-        res.json({users: results});
+        res.render("organization/CarOverview", {org: org});
     });
 };
 
-exports.NewCar = function NewCar(req, res, cb) {
-    var query = "INSERT INTO Cars VALUES(?, ?, ?, ?, ?)";
-    connection.query(query,
-        [req.body.reg, req.body.make, req.body.model, req.body.year, req.params.id],
-        function(err){
-            if (err) { return cb(err); }
-            res.redirect("/organizations/" + req.params.id + "/edit");
-        });
-};
-
-exports.CarOverview = function co(req, res, next) {
-    var query = "SELECT * FROM Organizations WHERE id=?";
-    connection.query(query, req.params.orgid, function(err, rows) {
-        if(err) {
-            return next(err);
-        }
-        res.render("organization/CarOverview", {org: rows[0]});
+exports.OrganizationCarOverviewData = function cod(req, res, cb) {
+    organizationService.getOrgCarOverviewData(req.params.orgid, function (err, cars) {
+        if(err) { return cb(err); }
+        res.json({cars: cars});
     });
 };
 
-exports.CarOverviewData = function cod(req, res, next) {
-    var query = "SELECT * FROM Cars AS C " +
-                    "JOIN Trips AS T ON T.car_id = C.registration " +
-                    "JOIN TripVertices AS TV ON TV.trip_id = T.id " +
-                "WHERE registration_time IN (" +
-                    "SELECT MAX(registration_time) FROM TripVertices " +
-                        "JOIN Trips ON Trips.id = TripVertices.trip_id " +
-                    "WHERE C.registration = Trips.car_id)";
-    connection.query(query, function(err, rows) {
-        if(err) {
-            return next(err);
-        }
-        var result = rows;
-        result.forEach(function(row) {
-            var date = moment(row.registration_time);
-            row["registration_time"] = date.format("Do MMMM YYYY HH:mm:ss");
-            row["active"] = date.isAfter(moment().subtract(2, "minute"));
-        });
-        res.json({cars: rows});
+exports.PostOrganizationNew = function postNewOrg(req, res, cb) {
+    organizationService.newOrg(req.body.name, function (err) {
+        if (err) { return cb(err); }
+        res.redirect("/organizations");
+    });
+};
+
+exports.PostOrganizationNewCar = function postNewOrganizationCar(req, res, cb) {
+    req.body.organization_id = req.params.orgid;
+    carService.newCar(req.body, function(err){
+        if (err) { return cb(err); }
+        res.redirect("/organizations/" + req.params.orgid);
+    });
+};
+
+exports.PostOrganizationAddUser = function postOrganizationAddUser(req, res, cb) {
+    var orgId = req.params.orgid;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Member", function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+};
+
+exports.PostOrganizationAddAdmin = function postOrganizationAddAdmin(req, res, cb) {
+    var orgId = req.params.orgid;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Admin", function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+};
+
+exports.PostOrganizationRemoveUser = function postOrganizationRemoveUser(req, res, cb) {
+    var orgId = req.params.orgid;
+    var user = req.body.user_id;
+    organizationService.removeFromOrg(user, orgId, function(err){
+        if (err) { return cb(err); }
+        return res.end();
+    });
+};
+
+exports.PostOrganizationRemoveAdmin = function postOrganizationRemoveAdmin(req, res, cb) {
+    var orgId = req.params.orgid;
+    var user = req.body.user_id;
+    organizationService.setOrgMember(user, orgId, "Member", function(err){
+        if (err) { return cb(err); }
+        return res.end();
     });
 };

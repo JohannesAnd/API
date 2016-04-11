@@ -16,7 +16,8 @@
 		font-size: 90%;
 	}
 
-	input[type=submit] {
+	input[type=submit],
+	button {
 		width: 100%;
 		background-color: #ff5f08;
 		color: white;
@@ -28,7 +29,6 @@
 		font-size: 100%;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, .12), inset 0 1px 0 hsla(0, 0%, 100%, .35);
 		text-shadow: 0 1px 0 #e54813;
-
 	}
 
 	input[type=submit]:hover  {

@@ -1,0 +1,13 @@
+extends ./../MainMenu
+
+block content
+    .orgContainer
+        h1= title
+        h2= subtitle
+        form(action="#{post_url}" method="post")
+            fielset
+                input(id="registration" name="registration" type="text" placeholder="Registration" value="#{values.registration}" required)
+                input(id="make" name="make" type="text" placeholder="Make" value="#{values.make}")
+                input(id="type" name="type" type="text" placeholder="Model" value="#{values.type}")
+                input(id="prodYear" name="prodYear" type="text" placeholder="Production year" value="#{values.prodYear}")
+                input(type="submit" value="#{buttonText}")
