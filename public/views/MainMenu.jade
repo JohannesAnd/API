@@ -1,8 +1,8 @@
 html
     head
-        link(href='/views/MainMenu.css', rel='stylesheet')
         link(href='/styles.css', rel='stylesheet')
         link(href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css')
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css")
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
         script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js' type="text/javascript")
@@ -13,24 +13,36 @@ html
     body
         .container
             block menu
-                #title
-                    a(href="/")
-                        img(src="/images/Logo.png")
-                #menu
-                    nav(role="full-horizontal")
-                        ul
-                            if user
-                                li
-                                    a(href="/signOut") Sign out
-                                li
-                                    a(href="/users/#{user.id}") #{user.name}
-                                li
-                                    a(href="/users") Users
-                                li
-                                    a(href="/organizations") Organizations
-                            else
-                                li
-                                    a(href="/signIn") Sign in
+                #mainMenu
+                    #title
+                        a(href="/")
+                            img(src="/images/Logo.png")
+                    #menu
+                        nav(role="full-horizontal")
+                            ul
+                                if user
+                                    li
+                                        a(href="/users/#{user.id}")
+                                            i(class="fa fa-user")
+                                            i(class="title")= user.name
+                                    li
+                                        a(href="/users")
+                                            i(class="fa fa-users")
+                                            i(class="title")="Users"
+                                    li
+                                        a(href="/organizations")
+                                            i(class="fa fa-sitemap")
+                                            i(class="title long")= "Organizations"
+                                            i(class="title short")= "Orgs"
+                                    li
+                                        a(href="/signOut")
+                                            i(class="fa fa-sign-out")
+                                            i(class="title")= "Sign out"
+                                else
+                                    li
+                                        a(href="/signIn")
+                                            i(class="fa fa-sign-in")
+                                            i(class="title")= "Sign in"
             .content
                 block content
             .footer
