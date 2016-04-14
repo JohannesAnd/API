@@ -7,13 +7,12 @@ block content
     .organization-container
         for organization in organizations
             .organization
-                .organization-title
-                    h1
-                        a(href="organizations/"+organization.id)= organization.name
-                .organization-main
-                    img(src="http://dummyimage.com/160x80/ffffff/000000.png&text=Company+Logo")
+                h1
+                    a(href="organizations/"+organization.id)= organization.name
+                img(src="http://dummyimage.com/160x80/ffffff/000000.png&text=Company+Logo")
+                .organization-car-list
+                    h2 Cars:
                     ul
-                        li= "Number of cars: " + organization.cars.length
                         for car in organization.cars
                             if car
                                 li= car.registration
