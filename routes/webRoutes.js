@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
     app.get("/organizations",                               ensureAuthenticated, webController.OrganizationList);
     app.get("/organizations/new",                           ensureAuthenticated, ensureAdmin, webController.OrganizationNew);
     app.get("/organizations/:orgid",                        ensureAuthenticated, ensureOrgMember, webController.OrganizationDetails);
-    app.get("/organizations/:orgid/newcar",                 ensureAuthenticated, ensureAdmin, webController.OrganizationNewCar);
+    app.get("/organizations/:orgid/newcar",                 ensureAuthenticated, ensureOrgAdmin, webController.OrganizationNewCar);
     app.get("/organizations/:orgid/edit",                   ensureAuthenticated, ensureOrgAdmin, webController.OrganizationEdit);
     app.get("/organizations/:orgid/users",                  ensureAuthenticated, ensureOrgMember, webController.OrganizationUsers);
     app.get("/organizations/:orgid/carOverview",            ensureAuthenticated, ensureOrgMember, webController.OrganizationCarOverview);

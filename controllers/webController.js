@@ -80,7 +80,7 @@ exports.PostUserEdit = function postUserEdit(req, res, cb) {
         }
         userService.updateUser(req.params.userid, updatedUser, function (err) {
             if (err) { return cb(err); }
-            if (req.params.userid == req.userid && req.body.name != req.user.name){
+            if (req.body.id !== req.user.id && req.body.name === req.user.name){
                 req.logout();
                 return res.redirect("/");
             }
