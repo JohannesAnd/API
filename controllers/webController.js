@@ -142,7 +142,7 @@ exports.CarTrips = function carTrips(req, res, cb) {
 };
 
 exports.CarTrip = function carTrip(req, res, cb) {
-    carService.getTripVerticiesFromTrip(req.params.tripid, function(err, rows){
+    carService.getTripVerticesFromTrip(req.params.tripid, function(err, rows){
         if (err) { return cb(err); }
 
         res.render("car/Trip", {vertices: rows, trip_id: req.params.orgid});
