@@ -45,8 +45,7 @@ exports.getUsersWithOrgRoles = function(orgID, cb) {
                     "UNION " +
                     "SELECT U.id, U.name, NULL as role FROM Users AS U " +
                         "LEFT JOIN OrgMembers AS OM ON OM.user_id = U.id " +
-                    "WHERE OM.org_id <> ? OR OM.org_id IS NULL) AS C " +
-                "GROUP BY C.id";
+                    "WHERE OM.org_id <> ? OR OM.org_id IS NULL) AS C ";
     connection.query(query, [orgID, orgID], cb);
 };
 
@@ -123,4 +122,14 @@ exports.getOrgDetailed = function(org_id, cb) {
             });
         })(key);
     }
+};
+
+exports.getUserTrips = function(user_id, number, cb) {
+    var query = "SELECT * FROM Trips WHERE Trips.user_id = ? ORDER BY Trips.start_time DESC";
+    connection.query(query, user_id, cb);
+};
+
+exports.getUserOrganizations = function(user_id, cb) {
+    var query = "SELECT O.id, O.name FROM Organizations AS O JOIN OrgMembers AS M ON O.id = M.org_id WHERE M.user_id = ? ORDER BY O.name DESC";
+    connection.query(query, user_id, cb);
 };

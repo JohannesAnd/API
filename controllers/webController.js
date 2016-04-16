@@ -9,7 +9,14 @@ exports.Landing = function Landing(req, res) {
     if(!req.user){
         return res.render("SigninLanding");
     }
-    res.render("LoggedInLanding");
+    var user_id = req.user.id;
+    organizationService.getUserTrips(user_id, 5, function(err, trips){
+        if (err) { return cb(err); }
+        organizationService.getUserOrganizations(user_id, function(err, orgs){
+            if (err) { return cb(err); }
+            res.render("LoggedInLanding", {trips: trips, orgs: orgs});
+        });
+    });
 };
 
 exports.SignOut = function signOut(req, res) {
