@@ -5,7 +5,7 @@ var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
 var userService = require("./../services/userService");
 
-exports.Landing = function Landing(req, res) {
+exports.Landing = function Landing(req, res, cb) {
     if(!req.user){
         return res.render("SigninLanding");
     }
