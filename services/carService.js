@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-var MAX_STATIC_MAP_VERTICES = 140;
+var MAX_STATIC_MAP_VERTICES = 130;
 
 exports.getCarDetails = function(registration, cb) {
     var query = "SELECT * FROM TripVertices AS T WHERE T.registration = ? ORDER BY T.registration_time ASC";
