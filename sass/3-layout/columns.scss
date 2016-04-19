@@ -2,7 +2,10 @@
 	@include outer-container;
 	.column1, .column2 {
 		@include span-columns(6);
+		@media (max-width: $column_break) {
+			@include span-columns(12);
 
+		}
 	}
 	list-style: none;
 }

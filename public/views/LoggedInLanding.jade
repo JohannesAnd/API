@@ -1,15 +1,16 @@
 extends MainMenu
 
 block content
-    h1 Landing page! :D
-    .twoEvenColumns
-        .column1
-            h2 My recent trips
-            each trip in trips
-                .trip
-                    a(href="/car/" + trip.car_id + "/" + trip.id + "/trip")=trip.car_id + " " + trip.start_time
-        .column2
-            h2 My organizations
-            each org in orgs
-                .org
-                    a(href="/organizations/" + org.id)=org.name
+    #landing_logged_in
+        .twoEvenColumns
+            .column1
+                h1 My recent trips
+                each trip in trips
+                    .trip
+                        a(href="/car/" + trip.car_id + "/" + trip.id + "/trip")=trip.start_time
+                        a(href="/car/" + trip.car_id + "/trips")=trip.car_id
+            .column2
+                h1 My organizations
+                each org in orgs
+                    .org
+                        a(href="/organizations/" + org.id)=org.name
