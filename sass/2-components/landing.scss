@@ -1,0 +1,20 @@
+#landing_logged_in {
+	.trip, .org {
+		display: block;
+		@media(min-width: 850px){
+			display: inline-block;
+		}
+		max-width: none;
+		min-width: 47%;
+		border: 1px solid grey;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		margin: 5px;
+		padding: 2%;
+		a {
+			display: block;
+			color: black;
+		}
+	}
+}

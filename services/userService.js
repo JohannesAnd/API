@@ -50,7 +50,7 @@ exports.getRelatedUsers = function(user, cb) {
     if (user.is_admin)
         return exports.getAllUsers(cb);
 
-    var query = "SELECT * FROM Users AS U " +
+    var query = "SELECT U.id, U.name FROM Users AS U " +
                     "JOIN OrgMembers AS OM ON OM.user_id = U.id " +
                 "WHERE OM.org_id IN (" +
                     "SELECT org_id FROM OrgMembers " +

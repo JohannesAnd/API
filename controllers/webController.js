@@ -5,11 +5,18 @@ var carService = require("./../services/carService");
 var organizationService = require("./../services/organizationService");
 var userService = require("./../services/userService");
 
-exports.Landing = function Landing(req, res) {
+exports.Landing = function Landing(req, res, cb) {
     if(!req.user){
         return res.render("SigninLanding");
     }
-    res.render("LoggedInLanding");
+    var user_id = req.user.id;
+    organizationService.getUserTrips(user_id, 5, function(err, trips){
+        if (err) { return cb(err); }
+        organizationService.getUserOrganizations(user_id, function(err, orgs){
+            if (err) { return cb(err); }
+            res.render("LoggedInLanding", {trips: trips, orgs: orgs});
+        });
+    });
 };
 
 exports.SignOut = function signOut(req, res) {

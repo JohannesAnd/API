@@ -1,4 +1,16 @@
 extends MainMenu
 
 block content
-    h1 Landing page! :D
+    #landing_logged_in
+        .twoEvenColumns
+            .column1
+                h1 My recent trips
+                each trip in trips
+                    .trip
+                        a(href="/car/" + trip.car_id + "/" + trip.id + "/trip")=trip.start_time
+                        a(href="/car/" + trip.car_id + "/trips")=trip.car_id
+            .column2
+                h1 My organizations
+                each org in orgs
+                    .org
+                        a(href="/organizations/" + org.id)=org.name
