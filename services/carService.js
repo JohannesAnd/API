@@ -9,8 +9,6 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-var MAX_STATIC_MAP_VERTICES = 70;
-
 exports.getCarDetails = function(registration, cb) {
     var query = "SELECT * FROM TripVertices AS T WHERE T.registration = ? ORDER BY T.registration_time ASC";
     connection.query(query, registration, function(err, rows) {
@@ -55,7 +53,6 @@ exports.getCarTripsWithRoute = function(car_id, cb){
             cb(err);
         }
         var trips = {};
-        var nth = Math.ceil(rows.length/MAX_STATIC_MAP_VERTICES);
         rows.forEach(function (row, index) {
             if (!(row.id in trips)){
                 trips[row.id] = row;
