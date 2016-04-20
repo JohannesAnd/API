@@ -57,17 +57,15 @@ exports.getCarTripsWithRoute = function(car_id, cb){
         var trips = {};
         var nth = Math.ceil(rows.length/MAX_STATIC_MAP_VERTICES);
         rows.forEach(function (row, index) {
-            if (index % nth === 0) {
-                if (!(row.id in trips)){
-                    trips[row.id] = row;
-                    trips[row.id].start_time = moment(trips[row.id].start_time);
-                    trips[row.id].route = [{lat: row.latitude, lon: row.longitude}];
-                    delete trips[row.id].latitude;
-                    delete trips[row.id].longitude;
-                }
-                else {
-                    trips[row.id].route.push({lat: row.latitude, lon: row.longitude});
-                }
+            if (!(row.id in trips)){
+                trips[row.id] = row;
+                trips[row.id].start_time = moment(trips[row.id].start_time);
+                trips[row.id].route = [{lat: row.latitude, lon: row.longitude}];
+                delete trips[row.id].latitude;
+                delete trips[row.id].longitude;
+            }
+            else {
+                trips[row.id].route.push({lat: row.latitude, lon: row.longitude});
             }
         });
         return cb(null, trips);
