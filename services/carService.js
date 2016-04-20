@@ -53,7 +53,7 @@ exports.getCarTripsWithRoute = function(car_id, cb){
             cb(err);
         }
         var trips = {};
-        rows.forEach(function (row, index) {
+        rows.forEach(function (row) {
             if (!(row.id in trips)){
                 trips[row.id] = row;
                 trips[row.id].start_time = moment(trips[row.id].start_time);
