@@ -1,3 +1,11 @@
 .carContainer{
-	border: 1px solid gray;
+    float: left;
+    margin: 5px;
+    padding: 5px;
+	border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#active .carContainer{
+    border: 2px solid #8CE00B;
 }

@@ -1,4 +1,4 @@
-var infowindow = new google.maps.InfoWindow({ maxWidth: 300, pixelOffset: new google.maps.Size(-2, 3)});;
+var infowindow = new google.maps.InfoWindow({ maxWidth: 300, pixelOffset: new google.maps.Size(-2, 3)});
 
 $(document).ready(function(){
     var flightPlanCoordinates = [];

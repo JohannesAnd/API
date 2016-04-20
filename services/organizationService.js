@@ -74,9 +74,9 @@ exports.getOrgCarOverviewData = function(org_id, cb){
         if(err) { return cb(err); }
         var result = rows;
         result.forEach(function(row) {
-            var date = moment(row.registration_time);
-            row["registration_time"] = date.format("Do MMMM YYYY HH:mm:ss");
-            row["active"] = date.isAfter(moment().subtract(2, "minute"));
+            row.active = moment(row.registration_time).isAfter(moment().subtract(2, "minute"));
+            row.registration_time = moment(row.registration_time).format("Do MMMM YYYY HH:mm:ss");
+            row.start_time = moment(row.start_time).format("Do MMMM YYYY HH:mm:ss");
         });
         cb(err, rows);
     });
@@ -129,7 +129,7 @@ exports.getUserTrips = function(user_id, number, cb) {
     connection.query(query, user_id, function(err, rows){
         if (err) { return cb(err);}
         rows.forEach(function(row){
-            row.start_time = moment(row.start_time).format("Do MMMM YYYY HH:mm:ss")
+            row.start_time = moment(row.start_time).format("Do MMMM YYYY HH:mm:ss");
         });
         cb(null, rows);
     });
