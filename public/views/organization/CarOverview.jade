@@ -8,9 +8,18 @@ block header
 
 block content
     .orgContainer
+        div Server time: #[span#serverTime]
+
         a(href="/organizations/#{org.id}") < Back to #{org.name}
         #map_canvas
         br
         h2="Car Overview for "+org.name
-        #active
-        #inactive
+        .twoEvenColumns
+            .column1
+                h3 Active Cars
+                #active
+
+            .column2
+                h3 Inactive Cars
+                #inactive
+

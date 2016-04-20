@@ -1,4 +1,4 @@
-var infowindow = null;
+var infowindow = new google.maps.InfoWindow({ maxWidth: 300, pixelOffset: new google.maps.Size(-2, 3)});
 
 $(document).ready(function(){
     var flightPlanCoordinates = [];
@@ -15,7 +15,8 @@ $(document).ready(function(){
         url: "/images/mapdot.png",
         size: new google.maps.Size(10, 10),
         origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(5, 5)
+        anchor: new google.maps.Point(4, 4),
+        scaledSize: new google.maps.Size(8, 8)
     };
 
     var bounds = new google.maps.LatLngBounds();
@@ -39,11 +40,6 @@ $(document).ready(function(){
             "</table>";
 
         new google.maps.event.addListener(marker, "click", (function(marker,content){
-            if (infowindow)
-                infowindow.close();
-
-            infowindow = new google.maps.InfoWindow({ maxWidth: 300 });
-
             return function() {
                 infowindow.setContent(content);
                 infowindow.open(map,marker);
@@ -57,8 +53,8 @@ $(document).ready(function(){
         path: flightPlanCoordinates,
         geodesic: true,
         strokeColor: "#0094ff",
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeOpacity: 0.5,
+        strokeWeight: 5,
         map: map
     });
 

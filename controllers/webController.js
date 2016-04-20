@@ -257,7 +257,7 @@ exports.OrganizationCarOverview = function co(req, res, cb) {
 exports.OrganizationCarOverviewData = function cod(req, res, cb) {
     organizationService.getOrgCarOverviewData(req.params.orgid, function (err, cars) {
         if(err) { return cb(err); }
-        res.json({cars: cars});
+        res.json({cars: cars, serverTime: moment().format("Do MMMM YYYY HH:mm:ss")});
     });
 };
 
