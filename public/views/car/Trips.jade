@@ -3,11 +3,18 @@ extends ./../MainMenu
 block content
     .trip-heading Trips by #{registration}
     .trips
+        - pointMaxStrLen = 2000 - 143; // 2000 is max URL length, 143 is image url without path
+        - precision = 5
+        - maxVerticies = Math.floor(pointMaxStrLen/((3+precision)*2+2));
         each trip in trips
             .trip
+                - nth = Math.ceil(trip.route.length/maxVerticies);
+                - index = 0;
                 - route = "";
-                for point in trip.route
-                    - route += point.lat + "," + point.lon + "|";
+                - for point in trip.route
+                    - if (index % nth == 0)
+                        - route += point.lat.toFixed(precision) + "," + point.lon.toFixed(precision) + "|";
+                    - index++;
                 - route = route.substring(0, route.length - 2);
 
                 a(href="/car/" + registration + "/" + trip.id + "/trip")
