@@ -128,14 +128,10 @@ exports.getUserTrips = function(user_id, number, cb) {
     var query = "SELECT * FROM Trips WHERE Trips.user_id = ? ORDER BY Trips.start_time DESC";
     connection.query(query, user_id, function(err, rows){
         if (err) { return cb(err);}
-        var result = [];
         rows.forEach(function(row){
-            result.push({
-                car_id: row.car_id,
-                start_time: moment(row.start_time).format("Do MMMM YYYY HH:mm:ss")
-            });
+            row.start_time = moment(row.start_time).format("Do MMMM YYYY HH:mm:ss")
         });
-        cb(null, result);
+        cb(null, rows);
     });
 };
 
