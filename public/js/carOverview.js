@@ -28,7 +28,7 @@ $(document).ready(function() {
     var onlineIcon = createCarIcon("/images/onlinecar.png");
     var offlineIcon = createCarIcon("/images/offlinecar.png");
 
-    function updateCars(successFunc){
+    function updateCars(doneFunc){
         $.ajax({
             url: "/organizations/" + id + "/carOverview/data",
             type: "get",
@@ -82,10 +82,11 @@ $(document).ready(function() {
                         "</div>"
                     );
                 });
-                if (successFunc) {
-                    successFunc();
+                if (doneFunc) {
+                    doneFunc();
                 }
-            }
+            },
+            error: doneFunc
         });
     }
 
@@ -115,5 +116,11 @@ $(document).ready(function() {
         map.fitBounds(bounds);
     });
 
-    setInterval(updateCars, 1000);
+    var onDone = function () {
+        setTimeout(function(){
+            updateCars(onDone);
+        }, 1000);
+    };
+
+    onDone();
 });
